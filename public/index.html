@@ -1,26 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <title>NodeJS Starter Application</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="stylesheets/style.css">
+    <title>Cloud Computing Chatroom</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #m { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      #send { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #chat{ display: none; }
+      #messagesScroll {overflow: auto; margin-bottom: 40px;}
+    </style>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<!--<script src="./client.js"></script>-->
+<script src="./client-gen.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="./socket.io-stream.js"></script>
   </head>
-
   <body>
-    <table>
-      <tr>
-        <td style= "width:30%;">
-          <img class = "newappIcon" src="images/newapp-icon.png">
-        </td>
-        <td>
-          <h1 id="message">Hello World!</h1>
-          <p class='description'></p> Thanks for creating a <span class = "blue">NodeJS Starter Application</span>.
-        </td>
-      </tr>
-    </table>
+  
+  <div id="chat">
+  <!-- filepicker for choosing a file -->
+  <input id="file" type="file" />
+  
+  <!-- div to make it scrollable -->
+  <div id="messagesScroll">
+    <ul id="messages"></ul>
+    <form id="chatform" action="">
+    <!-- input of the messages -->
+      <input id="m" autocomplete="off" /><button id="send">Send</button>
+    </form>
+    </div>
+  </div>
+  <!-- login form -->
+  <div id="login">
+   <form id="loginform" action="">
+   <!-- input of the namelogin -->
+      <input id="name" autocomplete="off" /><button id="login">Login</button>
+    </form>
+  </div>
+  
   </body>
-
 </html>
