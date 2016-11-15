@@ -43,6 +43,7 @@ io.on('connection', function(socket){
  * after that creating a substring from the first 5 letters, if its '/list' the user gets a list with all Users
  * and the socket(Client) gets an emit, with the event chat message and the list of the users.
  */
+    console.log("hello world");
 	  socket.on('chat message',
 			function(msg) {
 				msg = msg.trim();
