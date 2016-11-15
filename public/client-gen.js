@@ -13857,6 +13857,7 @@ $(document).ready (function() {
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
+      console.log("login with name: "+$('name'));
     return false;
   });
   
