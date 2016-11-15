@@ -15,6 +15,11 @@ var path = require('path');
 var cfenv = require('cfenv');
 var appEnv = cfenv.getAppEnv();
 
+app.listen(appEnv.port, '0.0.0.0', function() {
+  // print a message when the server starts listening
+  console.log("server starting on " + appEnv.url);
+});
+
 /*binding the public folder for static files
  * 
  */
@@ -136,9 +141,6 @@ io.on('connection', function(socket){
 /*
  * to listen on port 3000
  */
-http.listen(3000, function(){
-  console.log('listening on *:3000');
-});
 
 /*
  * function to register a client by name and socket
