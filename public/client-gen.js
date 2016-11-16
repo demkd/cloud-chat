@@ -2926,10 +2926,6 @@ var processNextTick = require('process-nextick-args');
 var isArray = require('isarray');
 /*</replacement>*/
 
-/*<replacement>*/
-var Duplex;
-/*</replacement>*/
-
 Readable.ReadableState = ReadableState;
 
 /*<replacement>*/
@@ -2977,8 +2973,6 @@ var StringDecoder;
 util.inherits(Readable, Stream);
 
 function prependListener(emitter, event, fn) {
-  // Sadly this is not cacheable as some libraries bundle their own
-  // event emitter implementation with them.
   if (typeof emitter.prependListener === 'function') {
     return emitter.prependListener(event, fn);
   } else {
@@ -2990,6 +2984,7 @@ function prependListener(emitter, event, fn) {
   }
 }
 
+var Duplex;
 function ReadableState(options, stream) {
   Duplex = Duplex || require('./_stream_duplex');
 
@@ -3059,6 +3054,7 @@ function ReadableState(options, stream) {
   }
 }
 
+var Duplex;
 function Readable(options) {
   Duplex = Duplex || require('./_stream_duplex');
 
@@ -3381,7 +3377,7 @@ function maybeReadMore_(stream, state) {
 // for virtual (non-string, non-buffer) streams, "length" is somewhat
 // arbitrary, and perhaps not very meaningful.
 Readable.prototype._read = function (n) {
-  this.emit('error', new Error('_read() is not implemented'));
+  this.emit('error', new Error('not implemented'));
 };
 
 Readable.prototype.pipe = function (dest, pipeOpts) {
@@ -3559,16 +3555,16 @@ Readable.prototype.unpipe = function (dest) {
     state.pipesCount = 0;
     state.flowing = false;
 
-    for (var i = 0; i < len; i++) {
-      dests[i].emit('unpipe', this);
+    for (var _i = 0; _i < len; _i++) {
+      dests[_i].emit('unpipe', this);
     }return this;
   }
 
   // try to find the right one.
-  var index = indexOf(state.pipes, dest);
-  if (index === -1) return this;
+  var i = indexOf(state.pipes, dest);
+  if (i === -1) return this;
 
-  state.pipes.splice(index, 1);
+  state.pipes.splice(i, 1);
   state.pipesCount -= 1;
   if (state.pipesCount === 1) state.pipes = state.pipes[0];
 
@@ -3953,6 +3949,7 @@ function Transform(options) {
 
   this._transformState = new TransformState(this);
 
+  // when the writable side finishes, then flush out anything remaining.
   var stream = this;
 
   // start out asking for a readable event once data is transformed.
@@ -3969,10 +3966,9 @@ function Transform(options) {
     if (typeof options.flush === 'function') this._flush = options.flush;
   }
 
-  // When the writable side finishes, then flush out anything remaining.
   this.once('prefinish', function () {
-    if (typeof this._flush === 'function') this._flush(function (er, data) {
-      done(stream, er, data);
+    if (typeof this._flush === 'function') this._flush(function (er) {
+      done(stream, er);
     });else done(stream);
   });
 }
@@ -3993,7 +3989,7 @@ Transform.prototype.push = function (chunk, encoding) {
 // an error, then that'll put the hurt on the whole operation.  If you
 // never call cb(), then you'll never get another chunk.
 Transform.prototype._transform = function (chunk, encoding, cb) {
-  throw new Error('_transform() is not implemented');
+  throw new Error('Not implemented');
 };
 
 Transform.prototype._write = function (chunk, encoding, cb) {
@@ -4023,10 +4019,8 @@ Transform.prototype._read = function (n) {
   }
 };
 
-function done(stream, er, data) {
+function done(stream, er) {
   if (er) return stream.emit('error', er);
-
-  if (data !== null && data !== undefined) stream.push(data);
 
   // if there's nothing in the write buffer, then that means
   // that nothing more will ever be provided
@@ -4055,10 +4049,6 @@ var processNextTick = require('process-nextick-args');
 
 /*<replacement>*/
 var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : processNextTick;
-/*</replacement>*/
-
-/*<replacement>*/
-var Duplex;
 /*</replacement>*/
 
 Writable.WritableState = WritableState;
@@ -4101,6 +4091,7 @@ function WriteReq(chunk, encoding, cb) {
   this.next = null;
 }
 
+var Duplex;
 function WritableState(options, stream) {
   Duplex = Duplex || require('./_stream_duplex');
 
@@ -4122,7 +4113,6 @@ function WritableState(options, stream) {
   // cast to ints.
   this.highWaterMark = ~ ~this.highWaterMark;
 
-  // drain event flag.
   this.needDrain = false;
   // at the start of calling end()
   this.ending = false;
@@ -4197,7 +4187,7 @@ function WritableState(options, stream) {
   this.corkedRequestsFree = new CorkedRequest(this);
 }
 
-WritableState.prototype.getBuffer = function getBuffer() {
+WritableState.prototype.getBuffer = function writableStateGetBuffer() {
   var current = this.bufferedRequest;
   var out = [];
   while (current) {
@@ -4217,37 +4207,13 @@ WritableState.prototype.getBuffer = function getBuffer() {
   } catch (_) {}
 })();
 
-// Test _writableState for inheritance to account for Duplex streams,
-// whose prototype chain only points to Readable.
-var realHasInstance;
-if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.prototype[Symbol.hasInstance] === 'function') {
-  realHasInstance = Function.prototype[Symbol.hasInstance];
-  Object.defineProperty(Writable, Symbol.hasInstance, {
-    value: function (object) {
-      if (realHasInstance.call(this, object)) return true;
-
-      return object && object._writableState instanceof WritableState;
-    }
-  });
-} else {
-  realHasInstance = function (object) {
-    return object instanceof this;
-  };
-}
-
+var Duplex;
 function Writable(options) {
   Duplex = Duplex || require('./_stream_duplex');
 
-  // Writable ctor is applied to Duplexes, too.
-  // `realHasInstance` is necessary because using plain `instanceof`
-  // would return false, as no `_writableState` property is attached.
-
-  // Trying to use the custom `instanceof` for Writable here will also break the
-  // Node.js LazyTransform implementation, which has a non-trivial getter for
-  // `_writableState` that would lead to infinite recursion.
-  if (!realHasInstance.call(Writable, this) && !(this instanceof Duplex)) {
-    return new Writable(options);
-  }
+  // Writable ctor is applied to Duplexes, though they're not
+  // instanceof Writable, they're instanceof Readable.
+  if (!(this instanceof Writable) && !(this instanceof Duplex)) return new Writable(options);
 
   this._writableState = new WritableState(options, this);
 
@@ -4507,7 +4473,7 @@ function clearBuffer(stream, state) {
 }
 
 Writable.prototype._write = function (chunk, encoding, cb) {
-  cb(new Error('_write() is not implemented'));
+  cb(new Error('not implemented'));
 };
 
 Writable.prototype._writev = null;
@@ -13857,6 +13823,7 @@ $(document).ready (function() {
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
+    consol.log("Login erfolgreich");
     return false;
   });
   

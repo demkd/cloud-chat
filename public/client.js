@@ -26,6 +26,7 @@ $(document).ready (function() {
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
+    consol.log("Login erfolgreich");
     return false;
   });
   
