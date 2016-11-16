@@ -13819,12 +13819,12 @@ $(document).ready (function() {
    *  */
   
   $('#loginform').submit(function() {
-      consol.log("geht in Login function");
+    console.log("geht in Login function");
     socket.emit('login', $('#name').val());
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
-    consol.log("Login erfolgreich");
+    console.log("Login erfolgreich");
     return false;
   });
   
