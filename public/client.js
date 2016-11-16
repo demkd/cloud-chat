@@ -22,7 +22,7 @@ $(document).ready (function() {
    *  */
   
   $('#loginform').submit(function() {
-    socket.emit('login', $('#name').val());
+    socket.emit('login', $('#name').val(), $('#password').val());
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();

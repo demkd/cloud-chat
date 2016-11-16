@@ -6,9 +6,11 @@ var io = require('socket.io')(http);
 var users = {};
 /*users to post the userlist*/
 var userlist = [];
+var userPasswords = {};
 var standardRoom = 'standardRoom';
 var roomlist = [standardRoom];
 var roomUserlist={};
+var roomPasswordlist={};
 /*filestream*/
 var fs = require('fs');
 /*stream*/
@@ -94,17 +96,28 @@ io.on('connection', function(socket){
                         msg = msg.substr(3);
                         var split = msg.split(" ");
                         var chatRoomName = split[0];
+                        var chatRoomPassword = split[1];
                         if(roomlist.indexOf(chatRoomName) > -1){
+                            if(roomPasswordlist[chatRoomName] === chatRoomPassword){
                             roomUserlist[socket.name]=chatRoomName;
                             console.log("User hat versucht einen Raum zu erstellen der bereits existiert");
+                            socket.emit('chat message',"raum wurde erstellt.");
+                            socket.emit('clearChat', chatRoomName+" wird beigetreten");
+                            }else{
+                                roomUserlist[socket.name]=standardRoom;
+                                console.log("hat falsches PW für den Raum eingegeben.");
+                                socket.emit('chat message', 'Wrong Password. You have been moved back to the standard room.');
+                                 }
                         }else {
                             roomlist.push(chatRoomName)
+                            roomPasswordlist[chatRoomName] = chatRoomPassword;
                             roomUserlist[socket.name]=chatRoomName;
                             console.log("User hat einen neuen Raum erstellt");
+                            socket.emit('chat message',"raum wurde erstellt."); 
+                            socket.emit('clearChat', chatRoomName+" wird beigetreten");
                         }
-                        socket.emit('chat message',"raum wurde erstellt.");
-                        socket.emit('clearChat', chatRoomName+" wird beigetreten");
-                    }                    
+                        
+                    } 
                 } else {
 					/*
 					 *to send a message to all in the room just adding time and the name of the user by reading it out from the socket 
@@ -128,11 +141,20 @@ io.on('connection', function(socket){
 	   * getting the name of the user as param and registering him on the system
 	   * all users are getting a message that the user signed in
 	   */
-	socket.on('login', function(name) {
-		registerName(name, socket);
-		console.log(time(), name, 'hat sich angemeldet');
-        roomUserlist[socket.name] = standardRoom;
-		io.emit('chat message', time() + name + ' signed in');
+	socket.on('login', function(name, password) {
+		if(checkIfUserExists(name)){
+            
+        if(checkUserPassword(name, password)){
+            console.log(time(), name, 'hat sich angemeldet');
+            roomUserlist[name] = standardRoom;
+		    io.emit('chat message', time() + name + ' signed in');
+            }else{
+                socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and enter the correct password.")    
+            }
+        }else{
+            registerUser(name, password, socket);
+            io.emit('chat message', name + ' hat sich registriert.');    
+        }
 	});
 	
 	/*
@@ -141,7 +163,6 @@ io.on('connection', function(socket){
 	 */
 	socket.on('disconnect', function() {
 		if (socket.name !== undefined) {
-			delete users[socket.name];
 			delete roomUserlist[socket.name];
             deleteUserFromList(socket.name);
 			console.log(time(), socket.name, 'hat sich abgemeldet');
@@ -172,12 +193,27 @@ io.on('connection', function(socket){
  * adding the name to the socket and adding the socket to a map by giving the name as key
  * then pushing the clientname to the userlist
  */
-function registerName(name, clientSocket){
-	clientSocket.name = name;
-	users[clientSocket.name] = clientSocket;
-	userlist.push(clientSocket.name);
+function checkIfUserExists(name){
+	for(var iterator in users){
+       if(iterator == name){
+        return true;
+       }
+    }
+    return false;
+       
 }
-
+function checkUserPassword(name, password){
+    console.log("check password: " + userPasswords[name] + " " + password);
+    if(userPasswords[name] == password){
+        return true;
+    }
+    return false;
+}
+function registerUser(name, password, clientSocket){
+       clientSocket.name = name;
+       users[clientSocket.name] = clientSocket;
+	   userlist.push(clientSocket.name);
+}
 /*
  * function to get the current time 
  */
@@ -253,8 +289,5 @@ function time(){
     
     function leaveRoom(socket){
         roomUserlist[socket.name].remove();
-    }
-    function clearRooms(){
-        roomlist = [];
     }
 
