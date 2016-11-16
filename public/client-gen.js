@@ -13819,6 +13819,7 @@ $(document).ready (function() {
    *  */
   
   $('#loginform').submit(function() {
+      consol.log("geht in Login function");
     socket.emit('login', $('#name').val());
     $('#name').val('');
     $('#login').hide();
