@@ -22,12 +22,10 @@ $(document).ready (function() {
    *  */
   
   $('#loginform').submit(function() {
-    console.log("geht in Login function");
     socket.emit('login', $('#name').val());
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
-    console.log("Login erfolgreich");
     return false;
   });
   
@@ -42,6 +40,11 @@ $(document).ready (function() {
 	    ss(socket).emit('file', stream, {size: file.size, name: file.name});
 	    ss.createBlobReadStream(file).pipe(stream);
   });
+    
+    socket.on('clearChat', function(data){
+        $('#messages').empty();
+        $('#messages').append($('<li>').text(data));
+    });
   
   /*
    * function to post the file link,

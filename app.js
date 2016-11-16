@@ -6,6 +6,9 @@ var io = require('socket.io')(http);
 var users = {};
 /*users to post the userlist*/
 var userlist = [];
+
+var roomlist = [];
+var roomUserlist={};
 /*filestream*/
 var fs = require('fs');
 /*stream*/
@@ -86,7 +89,23 @@ io.on('connection', function(socket){
 									+ "you can't text to yourself!")
 						}
 					}
-				} else {
+				}else if(msg.substr(0,3) == '/j '){
+                    if(socket.name!==undefined) {
+                        msg = msg.substr(3);
+                        var split = msg.split(" ");
+                        var chatRoomName = split[0];
+                        if(roomlist.indexOf(chatRoomName) > -1){
+                            roomUserlist[socket.name]=chatRoomName;
+                            console.log("User hat versucht einen Raum zu erstellen der bereits existiert");
+                        }else {
+                            roomlist.push(chatRoomName)
+                            roomUserlist[socket.name]=chatRoomName;
+                            console.log("User hat einen neuen Raum erstellt");
+                        }
+                        socket.emit('chat message',"raum wurde erstellt.");
+                        socket.emit('clearChat', chatRoomName+" wird begetreten");
+                    }                    
+                } else {
 					/*
 					 *to send a message to all in the room just adding time and the name of the user by reading it out from the socket 
 					 */
