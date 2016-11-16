@@ -210,6 +210,10 @@ function time(){
 		for (var i = 0; i< userlist.length; i++){
 			string += ' | ' + userlist[i];
 		}
+        string += " || Current Rooms: "
+        for (i = 0; i< roomlist.length; i++){
+            string += ' | ' + roomlist[i];
+        }
 		return string;
 	}
 	
