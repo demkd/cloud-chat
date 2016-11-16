@@ -6,8 +6,8 @@ var io = require('socket.io')(http);
 var users = {};
 /*users to post the userlist*/
 var userlist = [];
-
-var roomlist = [];
+var standardRoom = 'standardRoom';
+var roomlist = [standardRoom];
 var roomUserlist={};
 /*filestream*/
 var fs = require('fs');
@@ -103,7 +103,7 @@ io.on('connection', function(socket){
                             console.log("User hat einen neuen Raum erstellt");
                         }
                         socket.emit('chat message',"raum wurde erstellt.");
-                        socket.emit('clearChat', chatRoomName+" wird begetreten");
+                        socket.emit('clearChat', chatRoomName+" wird beigetreten");
                     }                    
                 } else {
 					/*
@@ -111,14 +111,18 @@ io.on('connection', function(socket){
 					 */
 					if (socket.name !== undefined) {
 						if (msg !== "") {
-							console.log(time() + " " + socket.name + " : "
-									+ msg);
-							io.emit('chat message', time() + socket.name + ": "
-									+ msg);
+							console.log(time() + " " + socket.name + " : " + msg);
+                            var usersInRoom = userInRoom(roomUserlist[socket.name]);
+                            for(var i = 0; i<usersInRoom.length;i++){
+                                if(users[usersInRoom[i]] !== undefined){
+                                users[usersInRoom[i]].emit('chat message', time() + socket.name + ": " + msg); 
+                                }
+							}
 						}
 					}
 				}
 			});
+    
 	  
 	  /*
 	   * getting the name of the user as param and registering him on the system
@@ -127,6 +131,7 @@ io.on('connection', function(socket){
 	socket.on('login', function(name) {
 		registerName(name, socket);
 		console.log(time(), name, 'hat sich angemeldet');
+        roomUserlist[socket.name] = standardRoom;
 		io.emit('chat message', time() + name + ' signed in');
 	});
 	
@@ -231,3 +236,21 @@ function time(){
 			}
 		}
 	}
+
+    function userInRoom(roomName){
+        var targetUsers = [];
+        for(var key in roomUserlist){
+            if (roomUserlist[key] == roomName){
+                targetUsers.push(key);
+            }
+        }
+       // for (var it = 0; it < targetUsers.length; it++){
+         //   console.log(targetUsers[it]);
+       // }
+        return targetUsers;
+    }
+    
+    function leaveRoom(socket){
+        roomUserlist[socket.name].remove();
+    }
+
