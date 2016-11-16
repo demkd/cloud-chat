@@ -142,9 +142,10 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function() {
 		if (socket.name !== undefined) {
 			delete users[socket.name];
-			deleteUserFromList(socket.name);
+			delete roomUserlist[socket.name];
+            deleteUserFromList(socket.name);
 			console.log(time(), socket.name, 'hat sich abgemeldet');
-			io.emit('chat message', time() + socket.name + ' signed out');
+            io.emit('chat message', time() + socket.name + ' signed out');
 		}
 	});
 	  
@@ -252,5 +253,8 @@ function time(){
     
     function leaveRoom(socket){
         roomUserlist[socket.name].remove();
+    }
+    function clearRooms(){
+        roomlist = [];
     }
 
