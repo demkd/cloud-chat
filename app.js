@@ -242,20 +242,20 @@ function writeToDB(name, password){
  */
 
 function checkIfUserExists(name){
-    
+    var existsInDB = true;
     //selector gets the ID(LoginName)
      idSelector.selector._id = name;
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
         if (error) {
                     console.log("User wurde nicht gefunden!");
-                    return false;
+                    existsInDB=false;
         } else {
             console.log("User wurde in der Datenbank gefunden!");
-            return true;
+            existsInDB=true;
             }
-        });
-    
+        });   
+    return existsInDB;
 }
 
 
