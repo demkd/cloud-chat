@@ -233,7 +233,7 @@ function checkUserPassword(name, password){
     return false;
 }
 function registerUser(name, password, clientSocket){
-    db.insert({_id: name, password: password}, function(error, body) {
+    database.insert({_id: name, password: password}, function(error, body) {
         if (er) {
             throw er;
         }
