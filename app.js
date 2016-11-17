@@ -158,8 +158,8 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-		
-    
+		var hashedPassword = sha256(password);
+        console.log(hashedPassword);
         //selector gets the ID(LoginName)
         idSelector.selector._id = name;
         //searching in the database
