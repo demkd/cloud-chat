@@ -101,8 +101,8 @@ io.on('connection', function(socket){
                             if(roomPasswordlist[chatRoomName] === chatRoomPassword){
                             roomUserlist[socket.name]=chatRoomName;
                             console.log("User hat versucht einen Raum zu erstellen der bereits existiert");
-                            socket.emit('chat message',"raum wurde erstellt.");
-                            socket.emit('clearChat', chatRoomName+" wird beigetreten");
+                            socket.emit('chat message',"new room created");
+                            socket.emit('clearChat', "joining: "+chatRoomName);
                             }else{
                                 roomUserlist[socket.name]=standardRoom;
                                 console.log("hat falsches PW für den Raum eingegeben.");
@@ -113,8 +113,8 @@ io.on('connection', function(socket){
                             roomPasswordlist[chatRoomName] = chatRoomPassword;
                             roomUserlist[socket.name]=chatRoomName;
                             console.log("User hat einen neuen Raum erstellt");
-                            socket.emit('chat message',"raum wurde erstellt."); 
-                            socket.emit('clearChat', chatRoomName+" wird beigetreten");
+                            socket.emit('chat message',"new room created"); 
+                            socket.emit('clearChat', "joining: "+chatRoomName);
                         }
                         
                     } 
@@ -142,6 +142,7 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
+        socket.name = name;
 		if(checkIfUserExists(socket.name)){
             
         if(checkUserPassword(name, password)){
@@ -193,6 +194,8 @@ io.on('connection', function(socket){
  * function to register a client by name and socket
  * adding the name to the socket and adding the socket to a map by giving the name as key
  * then pushing the clientname to the userlist
+ *
+ * Nothing wrong with this
  */
 function checkIfUserExists(name){
 	for(var iterator in users){
@@ -212,7 +215,7 @@ function checkIfUserExists(name){
  */
 function checkUserPassword(name, password){
     console.log("check password: " + userPasswords[name] + " " + password);
-    if(userPasswords[name] == password){
+    if(userPasswords[name] === password){
         return true;
     }
     return false;
@@ -220,6 +223,7 @@ function checkUserPassword(name, password){
 function registerUser(name, password, clientSocket){
        clientSocket.name = name;
        users[clientSocket.name] = clientSocket;
+       userPasswords[name]=password;
 	   userlist.push(clientSocket.name);
 }
 /*
