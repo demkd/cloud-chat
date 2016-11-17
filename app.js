@@ -173,10 +173,11 @@ io.on('connection', function(socket){
             console.log("User wurde in der Datenbank gefunden!");
             if(resultSet.docs[0].password === password){
                 socket.name = name;
+                users[socket.name] = socket;
                 userlist.push(name);
                 console.log(time(), name, 'hat sich angemeldet');
                 roomUserlist[socket.name] = standardRoom;
-		        io.emit('chat message', time() + name + ' signed in');
+		        io.emit('chat message', time() + name + ' signed in');                
             }else{
                 socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");
             }
