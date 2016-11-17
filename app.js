@@ -142,10 +142,10 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-        socket.name = name;
 		if(checkIfUserExists(socket.name)){
             
         if(checkUserPassword(name, password)){
+            socket.name = name;
             userlist.push(name);
             console.log(time(), name, 'hat sich angemeldet');
             roomUserlist[socket.name] = standardRoom;
