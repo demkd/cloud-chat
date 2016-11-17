@@ -163,7 +163,13 @@ io.on('connection', function(socket){
                 if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
         } else {
-             console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
+            console.log(resultSet);
+            console.log(resultSet.docs);
+            
+             for (var i = 0; i < resultSet.docs.length; i++) {
+                console.log('  Doc id: %s', resultSet.docs[i]._id);
+            }
+        //     console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
             }
         });
 		if(checkIfUserExists(name)){
