@@ -22,6 +22,7 @@ var appEnv = cfenv.getAppEnv();
 
 // Load the Cloudant library.
 var Cloudant = require('cloudant');
+var sha256 = require('sha256');
 var services;
 var credentials;
 var cloudant;
