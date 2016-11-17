@@ -26,6 +26,11 @@ var services;
 var credentials;
 var cloudant;
 var database;
+var idSelector = {
+    selector: {
+        "_id": ""
+        }
+};
 
 cloudantInit();
 
@@ -153,7 +158,8 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-        database.find({selector:{_id: name}}, function(error, resultSet) {
+        userSelector.selector._id = name;
+        database.find(idSelector, function(error, resultSet) {
                 if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
         } else {
@@ -223,7 +229,6 @@ function checkIfUserExists(name){
        }
     }
     return false;
-       
 }
 
 /*
