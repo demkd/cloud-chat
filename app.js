@@ -184,7 +184,7 @@ io.on('connection', function(socket){
                 socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");    
             }
         }else{
-            registerUser(name, password, socket);
+          //  registerUser(name, password, socket);
             roomUserlist[socket.name]=standardRoom;
             io.emit('chat message', name + ' hat sich registriert.');    
         }
