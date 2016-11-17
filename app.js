@@ -146,11 +146,12 @@ io.on('connection', function(socket){
 		if(checkIfUserExists(socket.name)){
             
         if(checkUserPassword(name, password)){
+            userlist.push(name);
             console.log(time(), name, 'hat sich angemeldet');
             roomUserlist[socket.name] = standardRoom;
 		    io.emit('chat message', time() + name + ' signed in');
             }else{
-                socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and enter the correct password.");    
+                socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");    
             }
         }else{
             registerUser(name, password, socket);
