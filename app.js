@@ -158,6 +158,7 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
+        console.log("If User Exists: "+checkIfUserExists(name));
 		if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
