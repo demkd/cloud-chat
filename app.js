@@ -324,7 +324,7 @@ function time(){
 
         var cloudantService = services['cloudantNoSQLDB'];
         for (var index in cloudantService) {
-            if (cloudantService[index].name === 'Cloudant-NOSQL-DB') {
+            if (cloudantService[index].name === 'datenbank') {
                 credentials = cloudantService[index].credentials;
             }
         }
