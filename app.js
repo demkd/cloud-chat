@@ -159,6 +159,7 @@ io.on('connection', function(socket){
         } else {
              console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
         }
+        }
 		if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
