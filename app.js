@@ -142,17 +142,18 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-		if(checkIfUserExists(name)){
+		if(checkIfUserExists(socket.name)){
             
         if(checkUserPassword(name, password)){
             console.log(time(), name, 'hat sich angemeldet');
-            roomUserlist[name] = standardRoom;
+            roomUserlist[socket.name] = standardRoom;
 		    io.emit('chat message', time() + name + ' signed in');
             }else{
                 socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and enter the correct password.")    
             }
         }else{
             registerUser(name, password, socket);
+            roomUserlist[socket.name]=standardRoom;
             io.emit('chat message', name + ' hat sich registriert.');    
         }
 	});
