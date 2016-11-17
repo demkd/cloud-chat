@@ -158,20 +158,7 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-        idSelector.selector._id = name;
-        database.find(idSelector, function(error, resultSet) {
-                if (error) {
-                    console.log("ERROR: Something went wrong during query procession: " + error);
-        } else {
-            console.log(resultSet);
-            console.log(resultSet.docs);
-            
-             for (var i = 0; i < resultSet.docs.length; i++) {
-                console.log('  Doc id: %s', resultSet.docs[i]._id);
-            }
-        //     console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
-            }
-        });
+       
 		if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
@@ -217,9 +204,25 @@ io.on('connection', function(socket){
 		}});
 	  
 	});
-/*
- * to listen on port 3000
- */
+
+function readFromDb(name, password){
+    
+    //selector gets the ID(LoginName)
+     idSelector.selector._id = name;
+        //searching in the database
+        database.find(idSelector, function(error, resultSet) {
+                if (error) {
+                    console.log("ERROR: Something went wrong during query procession: " + error);
+        } else {
+            console.log('Found %d documents of Jerico', result.docs.length);
+            for (var i = 0; i < result.docs.length; i++) {
+                console.log('  Doc id: %s', result.docs[i]._id);
+            }
+             //console.log("Passwort Datenbank: "+resultSet.docs[3].password+" Passwort eingegeben: "+password);
+            }
+        });
+}
+
 
 /*
  * function to register a client by name and socket
