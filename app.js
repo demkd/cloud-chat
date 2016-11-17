@@ -216,9 +216,9 @@ function readFromDb(name, password){
         } else {
             console.log('Found %d documents of Jerico', resultSet.docs.length);
             for (var i = 0; i < resultSet.docs.length; i++) {
-                console.log('  Doc id: %s', resultSet.docs[i]._id);
+                console.log('  Doc id '+i+': %s', resultSet.docs[i]._id);
             }
-             //console.log("Passwort Datenbank: "+resultSet.docs[3].password+" Passwort eingegeben: "+password);
+             console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
             }
         });
 }
