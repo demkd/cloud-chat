@@ -160,19 +160,18 @@ io.on('connection', function(socket){
 	   */
 	socket.on('login', function(name, password) {
 		var hashedPassword = sha256(password);
-        console.log(hashedPassword);
         //selector gets the ID(LoginName)
         idSelector.selector._id = name;
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
         if (resultSet.docs.length == 0) {
                 console.log("User wurde nicht gefunden! Wird registriert.");
-                registerUser(name, password, socket); //pruefen
+                registerUser(name, hashedPassword, socket); //pruefen
                 roomUserlist[socket.name]=standardRoom;
                 io.emit('chat message', name + ' hat sich registriert.');    
         } else {
             console.log("User wurde in der Datenbank gefunden!");
-            if(resultSet.docs[0].password === password){
+            if(resultSet.docs[0].password === hashedPassword){
                 socket.name = name;
                 users[socket.name] = socket;
                 userlist.push(name);
