@@ -158,7 +158,7 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-        userSelector.selector._id = name;
+        idSelector.selector._id = name;
         database.find(idSelector, function(error, resultSet) {
                 if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
