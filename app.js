@@ -158,8 +158,37 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-        console.log("If User Exists: "+checkIfUserExists(name));
-		if(checkIfUserExists(name)){
+		
+    
+        //selector gets the ID(LoginName)
+        idSelector.selector._id = name;
+        //searching in the database
+        database.find(idSelector, function(error, resultSet) {
+        if (error) {
+                console.log("User wurde nicht gefunden! Wird registriert.");
+                registerUser(name, password, socket); //pruefen
+                roomUserlist[socket.name]=standardRoom;
+                io.emit('chat message', name + ' hat sich registriert.');    
+        } else {
+            console.log("User wurde in der Datenbank gefunden!");
+            if(resultSet.docs[0].password === password){
+                socket.name = name;
+                userlist.push(name);
+                console.log(time(), name, 'hat sich angemeldet');
+                roomUserlist[socket.name] = standardRoom;
+		        io.emit('chat message', time() + name + ' signed in');
+            }else{
+                socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");
+            }
+         }
+     });   
+    });   
+        
+        
+        
+        
+        
+   /*     if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
                 socket.name = name;
@@ -176,7 +205,7 @@ io.on('connection', function(socket){
             io.emit('chat message', name + ' hat sich registriert.');    
         }
 	});
-	
+	*/
 	/*
 	 * disconnect event when losing session or smth, checking if the socket is registred and then deleting the user from the map
 	 * emiting a message to all that the user left
@@ -205,12 +234,12 @@ io.on('connection', function(socket){
 	  
 	});
 
-function readFromDb(name, password){
+/*function readFromDb(name, password){
     var passwordFromDB ="";
     //selector gets the ID(LoginName)
      idSelector.selector._id = name;
         //searching in the database
-       passwordFromDB = database.find(idSelector, function(error, resultSet) {
+       database.find(idSelector, function(error, resultSet) {
         if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
         } else {
@@ -222,7 +251,7 @@ function readFromDb(name, password){
         });
     return passwordFromDB;
 }
-
+*/
 function writeToDB(name, password){
     console.log("writing to DB new User");
      database.insert({_id: name, password: password}, function(error, body) {
@@ -242,7 +271,7 @@ function writeToDB(name, password){
  * Nothing wrong with this
  */
 
-function checkIfUserExists(name){
+/*function checkIfUserExists(name){
     var existsInDB = true;
     //selector gets the ID(LoginName)
      idSelector.selector._id = name;
@@ -258,7 +287,7 @@ function checkIfUserExists(name){
         });   
     return existsInDB;
 }
-
+*/
 
 
 
@@ -268,14 +297,17 @@ function checkIfUserExists(name){
  *
  *
  */
-function checkUserPassword(name, password){
-    var passwordFromDB = readFromDb(name, password);
-    console.log("Password from DB (checkUserPassword Func): " + passwordFromDB + " input Password: " + password);
-    if(passwordFromDB === password){
+/*function checkUserPassword(name, password){
+   // var passwordFromDB = readFromDb(name, password);
+    //console.log("Password from DB (checkUserPassword Func): " + passwordFromDB + " input Password: " + password);
+    
+    if(resultSet.docs[0].password === password){
         return true;
     }
     return false;
 }
+*/
+
 function registerUser(name, password, clientSocket){
         writeToDB(name, password);
         clientSocket.name = name;
