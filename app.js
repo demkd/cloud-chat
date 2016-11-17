@@ -326,7 +326,7 @@ function time(){
         
         
         if (cloudant !== null && cloudant !== undefined) {
-            database = cloudant.db.use('Cloudant NoSQL DB-il');
+            database = cloudant.db.use('Cloud Computing Chatroom');
         }
     }
 
