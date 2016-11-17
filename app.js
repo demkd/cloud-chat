@@ -246,8 +246,8 @@ function checkUserPassword(name, password){
 }
 function registerUser(name, password, clientSocket){
     database.insert({_id: name, password: password}, function(error, body) {
-        if (er) {
-            throw er;
+        if (error) {
+            throw error;
         }
         console.log('Created design document '+body);
         });
