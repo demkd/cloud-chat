@@ -203,6 +203,13 @@ function checkIfUserExists(name){
     return false;
        
 }
+
+/*
+ *function to check if password is right
+ *
+ *
+ *
+ */
 function checkUserPassword(name, password){
     console.log("check password: " + userPasswords[name] + " " + password);
     if(userPasswords[name] == password){
