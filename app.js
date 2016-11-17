@@ -210,13 +210,13 @@ function readFromDb(name, password){
     //selector gets the ID(LoginName)
      idSelector.selector._id = name;
         //searching in the database
-        database.find(idSelector, function(error, resultSet) {
+       passwordFromDB = database.find(idSelector, function(error, resultSet) {
         if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
         } else {
              if(resultSet.docs[0].password!==undefined ||resultSet.docs[0].password!==null){
                  console.log("Password from DB: "+resultSet.docs[0].password);
-                 passwordFromDB = resultSet.docs[0].password;
+                 return = resultSet.docs[0].password;
              }
             }
         });
