@@ -20,10 +20,21 @@ var path = require('path');
 var cfenv = require('cfenv');
 var appEnv = cfenv.getAppEnv();
 
+// Load the Cloudant library.
+var Cloudant = require('cloudant');
+var services;
+var credentials;
+var cloudant;
+var database;
+
+cloudantInit();
+
 http.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
 });
+
+
 
 /*binding the public folder for static files
  * 
@@ -142,14 +153,14 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-		if(checkIfUserExists(socket.name)){
+		if(checkIfUserExists(name)){
             
-        if(checkUserPassword(name, password)){
-            socket.name = name;
-            userlist.push(name);
-            console.log(time(), name, 'hat sich angemeldet');
-            roomUserlist[socket.name] = standardRoom;
-		    io.emit('chat message', time() + name + ' signed in');
+            if(checkUserPassword(name, password)){
+                socket.name = name;
+                userlist.push(name);
+                console.log(time(), name, 'hat sich angemeldet');
+                roomUserlist[socket.name] = standardRoom;
+		        io.emit('chat message', time() + name + ' signed in');
             }else{
                 socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");    
             }
@@ -299,6 +310,26 @@ function time(){
        // }
         return targetUsers;
     }
+
+    function cloudantInit(){
+        if (process.env.VCAP_SERVICES) {
+        services = JSON.parse(process.env.VCAP_SERVICES);
+
+        var cloudantService = services['cloudantNoSQLDB'];
+        for (var index in cloudantService) {
+            if (cloudantService[index].name === 'cloudant-nosql-db') {
+                credentials = cloudantService[index].credentials;
+            }
+        }
+        cloudant = Cloudant(credentials.url);
+        }
+        
+        
+        if (cloudant !== null && cloudant !== undefined) {
+            database = cloudant.db.use('Cloudant NoSQL DB-il');
+        }
+    }
+
     
     function leaveRoom(socket){
         roomUserlist[socket.name].remove();
