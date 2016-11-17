@@ -164,7 +164,7 @@ io.on('connection', function(socket){
         idSelector.selector._id = name;
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
-        if (error) {
+        if (resultSet.docs.length == 0) {
                 console.log("User wurde nicht gefunden! Wird registriert.");
                 registerUser(name, password, socket); //pruefen
                 roomUserlist[socket.name]=standardRoom;
