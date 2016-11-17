@@ -222,6 +222,7 @@ function readFromDb(name, password){
 }
 
 function writeToDB(name, password){
+    console.log("writing to DB new User");
      database.insert({_id: name, password: password}, function(error, body) {
         if (error) {
             throw error;
@@ -246,9 +247,10 @@ function checkIfUserExists(name){
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
         if (error) {
-                    console.log("ERROR: Something went wrong during query procession: " + error);
+                    console.log("User wurde nicht gefunden!");
                     return false;
         } else {
+            console.log("User wurde in der Datenbank gefunden!");
             return true;
             }
         });
