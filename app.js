@@ -233,10 +233,17 @@ function checkUserPassword(name, password){
     return false;
 }
 function registerUser(name, password, clientSocket){
-       clientSocket.name = name;
-       users[clientSocket.name] = clientSocket;
-       userPasswords[name]=password;
-	   userlist.push(clientSocket.name);
+    db.insert({_id: name, password: password}, function(error, body) {
+        if (er) {
+            throw er;
+        }
+        console.log('Created design document '+body);
+        });
+    
+        clientSocket.name = name;
+        users[clientSocket.name] = clientSocket;
+        userPasswords[name]=password;
+        userlist.push(clientSocket.name);
 }
 /*
  * function to get the current time 
