@@ -206,7 +206,7 @@ io.on('connection', function(socket){
 	});
 
 function readFromDb(name, password){
-    
+    var passwordFromDB ="";
     //selector gets the ID(LoginName)
      idSelector.selector._id = name;
         //searching in the database
@@ -216,10 +216,11 @@ function readFromDb(name, password){
         } else {
              if(resultSet.docs[0].password!==undefined ||resultSet.docs[0].password!==null){
                  console.log("Password from DB: "+resultSet.docs[0].password);
-                 return resultSet.docs[0].password;
+                 passwordFromDB = resultSet.docs[0].password;
              }
             }
         });
+    return passwordFromDB;
 }
 
 function writeToDB(name, password){
