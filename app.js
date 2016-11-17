@@ -317,7 +317,7 @@ function time(){
 
         var cloudantService = services['cloudantNoSQLDB'];
         for (var index in cloudantService) {
-            if (cloudantService[index].name === 'cloudant-nosql-db') {
+            if (cloudantService[index].name === 'Cloudant-NOSQL-DB') {
                 credentials = cloudantService[index].credentials;
             }
         }
@@ -326,7 +326,7 @@ function time(){
         
         
         if (cloudant !== null && cloudant !== undefined) {
-            database = cloudant.db.use('Cloud Computing Chatroom');
+            database = cloudant.db.use('usernameandpasswords');
         }
     }
 
