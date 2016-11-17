@@ -211,15 +211,23 @@ function readFromDb(name, password){
      idSelector.selector._id = name;
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
-                if (error) {
+        if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
         } else {
-            console.log('Found %d documents of Jerico', resultSet.docs.length);
-            for (var i = 0; i < resultSet.docs.length; i++) {
-                console.log('  Doc id '+i+': %s', resultSet.docs[i]._id);
+             if(resultSet.docs[0].password!==undefined ||resultSet.docs[0].password!==null){
+                 console.log("Password from DB: "+resultSet.docs[0].password);
+                 return resultSet.docs[0].password;
+             }
             }
-             console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
-            }
+        });
+}
+
+function writeToDB(name, password){
+     database.insert({_id: name, password: password}, function(error, body) {
+        if (error) {
+            throw error;
+        }
+        console.log('####Created design document '+body);
         });
 }
 
@@ -247,20 +255,15 @@ function checkIfUserExists(name){
  *
  */
 function checkUserPassword(name, password){
-    console.log("check password: " + userPasswords[name] + " " + password);
-    if(userPasswords[name] === password){
+    var passwordFromDB = readFromDb(name, password);
+    console.log("Password from DB (checkUserPassword Func): " + passwordFromDB + " input Password: " + password);
+    if(passwordFromDB === password){
         return true;
     }
     return false;
 }
 function registerUser(name, password, clientSocket){
-    database.insert({_id: name, password: password}, function(error, body) {
-        if (error) {
-            throw error;
-        }
-        console.log('Created design document '+body);
-        });
-    
+        writeToDB(name, password);
         clientSocket.name = name;
         users[clientSocket.name] = clientSocket;
         userPasswords[name]=password;
