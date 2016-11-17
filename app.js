@@ -158,7 +158,6 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-       readFromDb(name,password);
 		if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
@@ -171,7 +170,7 @@ io.on('connection', function(socket){
                 socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");    
             }
         }else{
-          //  registerUser(name, password, socket);
+            registerUser(name, password, socket);
             roomUserlist[socket.name]=standardRoom;
             io.emit('chat message', name + ' hat sich registriert.');    
         }
@@ -239,14 +238,25 @@ function writeToDB(name, password){
  *
  * Nothing wrong with this
  */
+
 function checkIfUserExists(name){
-	for(var iterator in users){
-       if(iterator == name){
-        return true;
-       }
-    }
-    return false;
+    
+    //selector gets the ID(LoginName)
+     idSelector.selector._id = name;
+        //searching in the database
+        database.find(idSelector, function(error, resultSet) {
+        if (error) {
+                    console.log("ERROR: Something went wrong during query procession: " + error);
+                    return false;
+        } else {
+            return true;
+            }
+        });
+    
 }
+
+
+
 
 /*
  *function to check if password is right
