@@ -153,6 +153,12 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
+        database.find({selector:{_id: name}}, function(error, resultSet) {
+                if (error) {
+                    console.log("ERROR: Something went wrong during query procession: " + error);
+        } else {
+             console.log("Passwort Datenbank: "+resultSet.docs[0].password+" Passwort eingegeben: "+password);
+        }
 		if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
@@ -233,7 +239,7 @@ function checkUserPassword(name, password){
     return false;
 }
 function registerUser(name, password, clientSocket){
-    database.insert({_id: name, value: password}, function(error, body) {
+    database.insert({_id: name, password: password}, function(error, body) {
         if (er) {
             throw er;
         }
