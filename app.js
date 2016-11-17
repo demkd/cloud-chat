@@ -214,9 +214,9 @@ function readFromDb(name, password){
                 if (error) {
                     console.log("ERROR: Something went wrong during query procession: " + error);
         } else {
-            console.log('Found %d documents of Jerico', result.docs.length);
-            for (var i = 0; i < result.docs.length; i++) {
-                console.log('  Doc id: %s', result.docs[i]._id);
+            console.log('Found %d documents of Jerico', resultSet.docs.length);
+            for (var i = 0; i < resultSet.docs.length; i++) {
+                console.log('  Doc id: %s', resultSet.docs[i]._id);
             }
              //console.log("Passwort Datenbank: "+resultSet.docs[3].password+" Passwort eingegeben: "+password);
             }
