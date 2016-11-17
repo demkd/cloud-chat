@@ -158,7 +158,7 @@ io.on('connection', function(socket){
 	   * all users are getting a message that the user signed in
 	   */
 	socket.on('login', function(name, password) {
-       
+       readFromDb(name,password);
 		if(checkIfUserExists(name)){
             
             if(checkUserPassword(name, password)){
