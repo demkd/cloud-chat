@@ -32,9 +32,10 @@ var idSelector = {
         "_id": ""
         }
 };
-
+//calls the function used to initiate the bluemix noSQL DBAS
 cloudantInit();
 
+//gets the port from the bluemix environment
 http.listen(appEnv.port, '0.0.0.0', function() {
   // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
@@ -108,6 +109,10 @@ io.on('connection', function(socket){
 									+ "you can't text to yourself!")
 						}
 					}
+                    /*
+                     * checks if the message sent by the character is a join room command
+                     * if it is, check if there is a room of equal name and compare passwords or create a new room with the password input
+                     */
 				}else if(msg.substr(0,3) == '/j '){
                     if(socket.name!==undefined) {
                         msg = msg.substr(3);
@@ -155,8 +160,12 @@ io.on('connection', function(socket){
     
 	  
 	  /*
-	   * getting the name of the user as param and registering him on the system
-	   * all users are getting a message that the user signed in
+       * first of all hashes the password by way of sha256
+	   * checks if the username is already in the database
+       * if true compares the hashed password with the password in the db and then establishes name - socket connection
+       * else writes the new login data into the db
+	   * all users are getting a message that the user signed in/registered
+       *
 	   */
 	socket.on('login', function(name, password) {
 		var hashedPassword = sha256(password);
@@ -253,6 +262,7 @@ io.on('connection', function(socket){
     return passwordFromDB;
 }
 */
+//simple fire-and-forget function that writes the input into the cloudant db
 function writeToDB(name, password){
     console.log("writing to DB new User");
      database.insert({_id: name, password: password}, function(error, body) {
@@ -308,7 +318,7 @@ function writeToDB(name, password){
     return false;
 }
 */
-
+//if a new user is to be registered, the name and password get entered into the db and the name - socket connection is saved on the server
 function registerUser(name, password, clientSocket){
         writeToDB(name, password);
         clientSocket.name = name;
@@ -375,7 +385,7 @@ function time(){
 			}
 		}
 	}
-
+    //returns all the users that are in a room specified by name
     function userInRoom(roomName){
         var targetUsers = [];
         for(var key in roomUserlist){
@@ -388,7 +398,7 @@ function time(){
        // }
         return targetUsers;
     }
-
+    //initializes the cloudant nosqldbas within the applications environment
     function cloudantInit(){
         if (process.env.VCAP_SERVICES) {
         services = JSON.parse(process.env.VCAP_SERVICES);
@@ -408,7 +418,7 @@ function time(){
         }
     }
 
-    
+    //unsubscribes a sockets room
     function leaveRoom(socket){
         roomUserlist[socket.name].remove();
     }
