@@ -35,13 +35,13 @@ $(document).ready (function() {
     */
    $('#securePWform').submit(function() {
     socket.emit('securePW', $('#securePassword').val());
+    $('#securePassword').val('');
     console.log("Master Password abgesendet!");
     return false;
   });
     
     socket.on('masterPassword', function(){
         console.log("Clientside Event angekommen!");
-        $('#securePassword').val('');
         $('#securePW').hide();
         $('#login').show();
     });
