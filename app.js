@@ -250,9 +250,9 @@ io.on('connection', function(socket){
 	});
 
 //simple fire-and-forget function that writes the input into the cloudant db
-function writeToDB(name, password){
+function writeToDB(name, password, avatarurl){
     console.log("writing to DB new User");
-     database.insert({_id: name, password: password}, function(error, body) {
+     database.insert({_id: name, password: password, avatar: avatarurl}, function(error, body) {
         if (error) {
             throw error;
         }
@@ -262,8 +262,7 @@ function writeToDB(name, password){
 
 //if a new user is to be registered, the name and password get entered into the db and the name - socket connection is saved on the server
 function registerUser(name, password, avatarurl, clientSocket){
-        writeToDB(name, password);
-        writeToDB(name, avatarurl);
+        writeToDB(name, password, avatarurl);
         clientSocket.name = name;
         users[clientSocket.name] = clientSocket;
         userPasswords[name]=password;
