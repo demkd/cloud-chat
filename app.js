@@ -197,9 +197,10 @@ io.on('connection', function(socket){
     
     socket.on('securePW', function(password){
         if(password === masterPassword){
-            socket.emit('masterPassword', true);
+            socket.emit('masterPassword');
+            consol.log("Secure Password was right!! "+masterPassword);
         }else{
-            socket.emit('masterPassword', false);
+            consol.log("Secure Password was NOT RIGHT!! "+masterPassword+" password eingetippt: "+password);
         }
     });
         

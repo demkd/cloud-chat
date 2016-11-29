@@ -13869,12 +13869,11 @@ $(document).ready (function() {
     return false;
   });
     
-    socket.on('masterPassword', function(data){
-       if(data===true){
+    socket.on('masterPassword', function(){
+        consol.log("Clientside Event angekommen!");
         $('#securePassword').val('');
         $('#securePW').hide();
         $('#login').show();
-       } 
     });
   
   /*function to send a file, creating new stream and opening pipe with a wrapped socket.
