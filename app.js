@@ -153,7 +153,7 @@ io.on('connection', function(socket){
                             var usersInRoom = userInRoom(roomUserlist[socket.name]);
                             for(var i = 0; i<usersInRoom.length;i++){
                                 if(users[usersInRoom[i]] !== undefined){
-                                users[usersInRoom[i]].emit('chat message', socket.avatar + time() + socket.name + ": " + msg); 
+                                users[usersInRoom[i]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg); 
                                 }
 							}
 						}
@@ -241,7 +241,7 @@ io.on('connection', function(socket){
 		}});
     
       ss(socket).on('avatar', function(stream, data) {
-		    var filename = __dirname + "/downloads/" + path.basename(data.name);
+		    var filename = __dirname + "./downloads/" + path.basename(data.name);
 		    stream.pipe(fs.createWriteStream(filename));
 		    console.log(time()+socket.name+": hat "+data.name+" avatar hochgeladen");
 		    socket.avatar = filename;

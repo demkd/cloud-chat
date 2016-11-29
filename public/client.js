@@ -12,8 +12,12 @@ $(document).ready (function() {
     return false;
   });
   /* function to recive the message from server */
-  socket.on('chat message', function(msg){
-	  $('#messages').append($('<li>').text(msg));
+  socket.on('chat message', function(avatarurl, msg){
+      var avatar = new Image(64,64);   
+      avatar.src = avatarurl;
+      $('#messages').append($('<li>')   
+      $('#messages').append(avatar);
+	  $('#messages').append(msg);
   });
   
   /* function to login the User 
