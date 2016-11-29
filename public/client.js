@@ -15,9 +15,7 @@ $(document).ready (function() {
   socket.on('chat message', function(avatarurl, msg){
       var avatar = new Image(64,64);   
       avatar.src = avatarurl;
-      $('#messages').append($('<li>')   
-      $('#messages').append(avatar);
-	  $('#messages').append(msg);
+      $('#messages').append($('<li>')).append(avatar).text(msg);
   });
   
   /* function to login the User 
