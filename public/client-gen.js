@@ -13899,12 +13899,24 @@ $(document).ready (function() {
    * the link will be posted into the chat as a list object and will get the dataname over the data param
    */
   socket.on('file', function(data) {
-	 // $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
-      var upimage = new Image(256,256);
-      upimage.src = "./downloads/" + data.name;
-      $('#messages').append($('<li>'));
-      $('#messages').append(upimage);
+	 if(checkIfImage(data.name)){
+         var upimage = new Image(256,256);
+         upimage.src = "./downloads/" + data.name;
+         $('#messages').append($('<li>'));
+         $('#messages').append(upimage);
+         $('#messages').append($('</li>'));
+     }else{
+         $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
+     }
   });
+    
+   function checkIfImage(url){
+     var split = url.split(".");
+     if(split[1] === "png" || split[1] === "jpg" || split[1] === "bmp" || split[1] === "gif" ){
+        return true;
+        }
+       return false;
+   }
 });
 
 
