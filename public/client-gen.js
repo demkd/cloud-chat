@@ -13900,9 +13900,10 @@ $(document).ready (function() {
    */
   socket.on('file', function(data) {
 	 // $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
-      var upimage = new Image(64,64);
+      var upimage = new Image(256,256);
       upimage.src = "./downloads/" + data.name;
-      $('#messages').append($('<li>') + upimage);
+      $('#messages').append($('<li>'));
+      $('#messages').append(upimage);
   });
 });
 
