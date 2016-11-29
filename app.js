@@ -100,9 +100,9 @@ io.on('connection', function(socket){
 
 							if (users[nameToSendMessageTo] !== undefined) {
                                 
-                                users[nameToSendMessageTo].emit('chat message', time() + "from " + socket.name + ": " + "<font color = \"red\">" + messageToSend + "</font>");
+                                users[nameToSendMessageTo].emit('chat message', time() + "from " + socket.name + ": " + messageToSend);
                                 
-								socket.emit('chat message', time() + "to "+ nameToSendMessageTo + ": "+ "<font color = \"blue\">" + messageToSend + "</font>");
+								socket.emit('chat message', time() + "to "+ nameToSendMessageTo + ": "+ messageToSend);
 							}
 							/*
 							 * User gets this message if he wants to whisper to himself

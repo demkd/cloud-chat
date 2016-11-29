@@ -13853,6 +13853,7 @@ $(document).ready (function() {
    *  */
 
   $('#loginform').submit(function() {
+    console.log("valid avatar: " + checkIfImage($('#avatar').val));
     socket.emit('login', $('#name').val(), $('#password').val());
     $('#name').val('');
     $('#login').hide();
