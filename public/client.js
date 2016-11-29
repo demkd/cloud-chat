@@ -68,7 +68,10 @@ $(document).ready (function() {
    * the link will be posted into the chat as a list object and will get the dataname over the data param
    */
   socket.on('file', function(data) {
-	  $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
+	 // $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
+      var image = new Image(64,64);
+      image.src = "https://3.bp.blogspot.com/-JhISDA9aj1Q/UTECr1GzirI/AAAAAAAAC2o/5qmvWZiCMRQ/s1600/Twitter.png";
+      $('#messages').append($('<li>').text(msg));
   });
 });
 
