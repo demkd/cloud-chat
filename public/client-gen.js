@@ -13853,7 +13853,7 @@ $(document).ready (function() {
    *  */
 
   $('#loginform').submit(function() {
-    socket.emit('login', $('#name').val(), $('#password').val());
+    socket.emit('login', $('#name').val(), $('#securePassword').val());
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
@@ -13865,12 +13865,17 @@ $(document).ready (function() {
     * function to login with the master pw to the chatapp
     */
    $('securePWform').submit(function() {
-    sockeet.emit('securePW', $('#securePassword').val(), $('#password').val());
-    $('#name').val('');
-    $('#securePW').hide();
-    $('#login').show();
+    socket.emit('securePW', $('#password').val());
     return false;
   });
+    
+    socket.on('masterPassword', function(data){
+       if(data===true){
+        $('#securePassword').val('');
+        $('#securePW').hide();
+        $('#login').show();
+       } 
+    });
   
   /*function to send a file, creating new stream and opening pipe with a wrapped socket.
    * Emiting it to the server with the size of the file and the name of the file and the stream

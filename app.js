@@ -27,6 +27,7 @@ var services;
 var credentials;
 var cloudant;
 var database;
+var masterPassword= 'chat';
 var idSelector = {
     selector: {
         "_id": ""
@@ -193,6 +194,14 @@ io.on('connection', function(socket){
          }
      });   
     });   
+    
+    socket.on('securePW', function(password){
+        if(password === masterPassword){
+            socket.emit('masterPassword', true);
+        }else{
+            socket.emit('masterPassword', false);
+        }
+    });
         
         
         
