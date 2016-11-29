@@ -177,14 +177,20 @@ io.on('connection', function(socket){
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
         if (resultSet.docs.length == 0) {
+                if(socket.avatar === null || socket.avatar === undefined || socket.avatar === ""){
+                    socket.emit('chat message' + "Bitte laden sie einen Avatar hoch.");
+                }
+                else{
                 console.log("User wurde nicht gefunden! Wird registriert.");
-                registerUser(name, hashedPassword, socket); //pruefen
+                registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
                 roomUserlist[socket.name]=standardRoom;
-                io.emit('chat message', name + ' hat sich registriert.');    
+                io.emit('chat message', name + ' hat sich registriert.');
+                }    
         } else {
             console.log("User wurde in der Datenbank gefunden!");
             if(resultSet.docs[0].password === hashedPassword){
                 socket.name = name;
+                socket.avatar = resultSet.docs[0].avatar;
                 users[socket.name] = socket;
                 userlist.push(name);
                 console.log(time(), name, 'hat sich angemeldet');
@@ -207,27 +213,6 @@ io.on('connection', function(socket){
     });
         
         
-        
-        
-        
-   /*     if(checkIfUserExists(name)){
-            
-            if(checkUserPassword(name, password)){
-                socket.name = name;
-                userlist.push(name);
-                console.log(time(), name, 'hat sich angemeldet');
-                roomUserlist[socket.name] = standardRoom;
-		        io.emit('chat message', time() + name + ' signed in');
-            }else{
-                socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");    
-            }
-        }else{
-            registerUser(name, password, socket);
-            roomUserlist[socket.name]=standardRoom;
-            io.emit('chat message', name + ' hat sich registriert.');    
-        }
-	});
-	*/
 	/*
 	 * disconnect event when losing session or smth, checking if the socket is registred and then deleting the user from the map
 	 * emiting a message to all that the user left
@@ -253,27 +238,16 @@ io.on('connection', function(socket){
 		    console.log(time()+socket.name+": hat "+data.name+" versendet");
 		    io.emit('file', {name: data.name, time: time(),socketName: socket.name});
 		}});
+      ss(socket).on('avatar', function(stream, data) {
+		  if(socket.name!== undefined){
+		    var filename = __dirname + "/downloads/" + path.basename(data.name);
+		    stream.pipe(fs.createWriteStream(filename));
+		    console.log(time()+socket.name+": hat "+data.name+" avatar hochgeladen");
+		    socket.avatar = filename;
+		}});
 	  
 	});
 
-/*function readFromDb(name, password){
-    var passwordFromDB ="";
-    //selector gets the ID(LoginName)
-     idSelector.selector._id = name;
-        //searching in the database
-       database.find(idSelector, function(error, resultSet) {
-        if (error) {
-                    console.log("ERROR: Something went wrong during query procession: " + error);
-        } else {
-             if(resultSet.docs[0].password!==undefined ||resultSet.docs[0].password!==null){
-                 console.log("Password from DB: "+resultSet.docs[0].password);
-                 return = resultSet.docs[0].password;
-             }
-            }
-        });
-    return passwordFromDB;
-}
-*/
 //simple fire-and-forget function that writes the input into the cloudant db
 function writeToDB(name, password){
     console.log("writing to DB new User");
@@ -285,54 +259,9 @@ function writeToDB(name, password){
         });
 }
 
-
-/*
- * function to register a client by name and socket
- * adding the name to the socket and adding the socket to a map by giving the name as key
- * then pushing the clientname to the userlist
- *
- * Nothing wrong with this
- */
-
-/*function checkIfUserExists(name){
-    var existsInDB = true;
-    //selector gets the ID(LoginName)
-     idSelector.selector._id = name;
-        //searching in the database
-        database.find(idSelector, function(error, resultSet) {
-        if (error) {
-                    console.log("User wurde nicht gefunden!");
-                    existsInDB=false;
-        } else {
-            console.log("User wurde in der Datenbank gefunden!");
-            existsInDB=true;
-            }
-        });   
-    return existsInDB;
-}
-*/
-
-
-
-/*
- *function to check if password is right
- *
- *
- *
- */
-/*function checkUserPassword(name, password){
-   // var passwordFromDB = readFromDb(name, password);
-    //console.log("Password from DB (checkUserPassword Func): " + passwordFromDB + " input Password: " + password);
-    
-    if(resultSet.docs[0].password === password){
-        return true;
-    }
-    return false;
-}
-*/
 //if a new user is to be registered, the name and password get entered into the db and the name - socket connection is saved on the server
-function registerUser(name, password, clientSocket){
-        writeToDB(name, password);
+function registerUser(name, password, avatarurl clientSocket){
+        writeToDB(name, password, avatarurl);
         clientSocket.name = name;
         users[clientSocket.name] = clientSocket;
         userPasswords[name]=password;

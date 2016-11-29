@@ -59,6 +59,13 @@ $(document).ready (function() {
 	    ss(socket).emit('file', stream, {size: file.size, name: file.name});
 	    ss.createBlobReadStream(file).pipe(stream);
   });
+  $('#avatar').change(function(e) {
+	    var file = e.target.files[0];
+	    var stream = ss.createStream();
+	    // upload a file to the server.
+	    ss(socket).emit('avatar', stream, {size: file.size, name: file.name});
+	    ss.createBlobReadStream(file).pipe(stream);
+  });
     
     socket.on('clearChat', function(data){
         $('#messages').empty();
