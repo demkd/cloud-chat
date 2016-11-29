@@ -178,6 +178,7 @@ io.on('connection', function(socket){
         database.find(idSelector, function(error, resultSet) {
         if (resultSet.docs.length == 0) {
                 if(socket.avatar === null || socket.avatar === undefined || socket.avatar === ""){
+                    console.log("User hat versucht sich ohne Avatar zu registrieren.");
                     socket.emit('chat message' + "Bitte laden sie einen Avatar hoch.");
                 }
                 else{

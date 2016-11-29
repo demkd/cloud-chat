@@ -13891,9 +13891,9 @@ $(document).ready (function() {
 	    ss.createBlobReadStream(file).pipe(stream);
   });
   $('#avatar').change(function(e) {
+        console.log("avatar hochgeladen");
 	    var file = e.target.files[0];
 	    var stream = ss.createStream();
-	    // upload a file to the server.
 	    ss(socket).emit('avatar', stream, {size: file.size, name: file.name});
 	    ss.createBlobReadStream(file).pipe(stream);
   });
