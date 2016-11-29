@@ -241,7 +241,7 @@ io.on('connection', function(socket){
 		}});
     
       ss(socket).on('avatar', function(stream, data) {
-		    var filename = "/downloads/" + path.basename(data.name);
+		    var filename = "./downloads/" +  path.basename(data.name);
 		    stream.pipe(fs.createWriteStream(filename));
 		    console.log(time()+socket.name+": hat "+data.name+" avatar hochgeladen");
 		    socket.avatar = filename;
