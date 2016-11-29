@@ -153,7 +153,7 @@ io.on('connection', function(socket){
                             var usersInRoom = userInRoom(roomUserlist[socket.name]);
                             for(var i = 0; i<usersInRoom.length;i++){
                                 if(users[usersInRoom[i]] !== undefined){
-                                users[usersInRoom[i]].emit('chat message', time() + socket.name + ": " + msg); 
+                                users[usersInRoom[i]].emit('chat message', socket.avatar + time() + socket.name + ": " + msg); 
                                 }
 							}
 						}
@@ -238,13 +238,13 @@ io.on('connection', function(socket){
 		    console.log(time()+socket.name+": hat "+data.name+" versendet");
 		    io.emit('file', {name: data.name, time: time(),socketName: socket.name});
 		}});
+    
       ss(socket).on('avatar', function(stream, data) {
-		  if(socket.name!== undefined){
 		    var filename = __dirname + "/downloads/" + path.basename(data.name);
 		    stream.pipe(fs.createWriteStream(filename));
 		    console.log(time()+socket.name+": hat "+data.name+" avatar hochgeladen");
 		    socket.avatar = filename;
-		}});
+		});
 	  
 	});
 
