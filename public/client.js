@@ -69,9 +69,9 @@ $(document).ready (function() {
    */
   socket.on('file', function(data) {
 	 // $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
-      var image = new Image(64,64);
-      image.src = "https://3.bp.blogspot.com/-JhISDA9aj1Q/UTECr1GzirI/AAAAAAAAC2o/5qmvWZiCMRQ/s1600/Twitter.png";
-      $('#messages').append($('<li>').text(msg));
+      var upimage = new Image(64,64);
+      upimage.src = "./downloads/" + data.name;
+      $('#messages').append($('<li>').text(upimage));
   });
 });
 
