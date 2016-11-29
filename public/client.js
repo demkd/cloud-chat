@@ -22,7 +22,8 @@ $(document).ready (function() {
    *  */
 
   $('#loginform').submit(function() {
-    console.log("valid avatar: " + checkIfImage($('#avatar').val));
+    console.log($('#avatar'));
+      //console.log("valid avatar: " + checkIfImage($('#avatar').));
     socket.emit('login', $('#name').val(), $('#password').val());
     $('#name').val('');
     $('#login').hide();
@@ -81,6 +82,7 @@ $(document).ready (function() {
   });
     
    function checkIfImage(url){
+     url = url.toString;
      var split = url.split(".");
      if(split[1] === "png" || split[1] === "jpg" || split[1] === "bmp" || split[1] === "gif" ){
         return true;

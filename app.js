@@ -27,7 +27,7 @@ var services;
 var credentials;
 var cloudant;
 var database;
-var masterPassword= 'chat';
+var masterPassword= '123';
 var idSelector = {
     selector: {
         "_id": ""
