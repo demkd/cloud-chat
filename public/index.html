@@ -12,6 +12,7 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
       #chat{ display: none; }
+      #login{ display: none; }
       #messagesScroll {overflow: auto; margin-bottom: 40px;}
     </style>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
@@ -41,6 +42,14 @@
    <form id="loginform" action="">
    <!-- input of the namelogin -->
       <input id="name" autocomplete="off" /><input id="password" type="password"/><button id="login">Login</button>
+    </form>
+  </div>
+      
+      <!-- secure password form -->
+  <div id="securePW">
+   <form id="securePWform" action="">
+   <!-- input of the namelogin -->
+      <input id="securePassword" type="password"/><button id="securePW">GO</button>
     </form>
   </div>
   
