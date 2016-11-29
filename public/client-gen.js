@@ -13851,12 +13851,24 @@ $(document).ready (function() {
    * if the users submits something the value of the name field will be send to the server.
    *  After that the login will form will be hide and chatform will be shown and the name field will be cleared
    *  */
-  
+
   $('#loginform').submit(function() {
     socket.emit('login', $('#name').val(), $('#password').val());
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
+    return false;
+  });
+    
+    
+    /*
+    * function to login with the master pw to the chatapp
+    */
+   $('securePWform').submit(function() {
+    sockeet.emit('securePW', $('#securePassword').val(), $('#password').val());
+    $('#name').val('');
+    $('#securePW').hide();
+    $('#login').show();
     return false;
   });
   
