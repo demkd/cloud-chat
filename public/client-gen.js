@@ -13853,7 +13853,7 @@ $(document).ready (function() {
    *  */
 
   $('#loginform').submit(function() {
-    socket.emit('login', $('#name').val(), $('#securePassword').val());
+    socket.emit('login', $('#name').val(), $('#password').val());
     $('#name').val('');
     $('#login').hide();
     $('#chat').show();
@@ -13864,8 +13864,9 @@ $(document).ready (function() {
     /*
     * function to login with the master pw to the chatapp
     */
-   $('securePWform').submit(function() {
-    socket.emit('securePW', $('#password').val());
+   $('#securePWform').submit(function() {
+    socket.emit('securePW', $('#securePassword').val());
+    consol.log("Master Password abgesendet!");
     return false;
   });
     
