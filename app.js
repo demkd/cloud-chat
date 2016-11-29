@@ -262,7 +262,8 @@ function writeToDB(name, password){
 
 //if a new user is to be registered, the name and password get entered into the db and the name - socket connection is saved on the server
 function registerUser(name, password, avatarurl, clientSocket){
-        writeToDB(name, password, avatarurl);
+        writeToDB(name, password);
+        writeToDB(name, avatarurl);
         clientSocket.name = name;
         users[clientSocket.name] = clientSocket;
         userPasswords[name]=password;
