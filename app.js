@@ -387,7 +387,7 @@ function time(){
         
         var visualRecognitionService = services['watson_vision_combined'];
         for (var service in visualRecognitionService) {
-            if (visualRecognitionService[service].name === 'visual-recognition') {
+            if (visualRecognitionService[service].name === 'visualrecognition') {
                 facerecognition = new VisualRecognitionV3({
                     api_key: visualRecognitionService[service].credentials.api_key,
                     version_date: '2016-05-20'
