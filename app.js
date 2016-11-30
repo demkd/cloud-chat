@@ -184,7 +184,7 @@ io.on('connection', function(socket){
                     socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
-                    checkavatar(socket.avatar);
+                    checkAvatar(socket.avatar);
                     if(socket.avataraccepted){
                         console.log("User wurde nicht gefunden! Wird registriert.");
                         registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
