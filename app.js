@@ -449,7 +449,7 @@ function time(){
                         "password": "MAeHtQD50F",
                         "host": "twcservice.mybluemix.net",
                         "port": 443,
-                        "url": "https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F
+                        "url": "https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F"
                         }
                     }]
         }
