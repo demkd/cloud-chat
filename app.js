@@ -459,8 +459,9 @@ function time(){
         console.log("getlocation " + location);
         request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location+"&language=en-US", function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                var lat = body.location.latitude[0];
-                var lon = body.location.longitude[0];
+                var resjson = JSON.parse(response.body);
+                var lat = resjson.location.latitude[0];
+                var lon = resjson.location.longitude[0];
                 console.log("location data lat: "+lat + " long: "+lon);
             }else{
                 console.log("An error happened while trying to get location");
