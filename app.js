@@ -24,6 +24,8 @@ var appEnv = cfenv.getAppEnv();
 var Cloudant = require('cloudant');
 var VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 var facerecognition;
+var request = require('request');
+var weatherservice;
 var sha256 = require('sha256');
 var services;
 var credentials;
@@ -87,7 +89,11 @@ io.on('connection', function(socket){
 					 * then getting all the splitted messages together and sending it to the user if user exists
 					 * the user which sended the message gets a message that he has sended the message to the user with the message
 					 */
-				} else if (msg.substr(0, 3) == '/w ') {
+				} else if (msg.substr(0, 7) == '/wetter'){
+                    var split = msg.split(" ");
+                    getLocation(split[1]);
+                }
+                }else if (msg.substr(0, 3) == '/w ') {
 					if (socket.name !== undefined) {
 						msg = msg.substr(3); // this removes the '/w ' string
 						var split = msg.split(" ");
@@ -435,8 +441,33 @@ function time(){
                 });
             }
         }
+        
+        var weatherservice = {
+                    "weatherinsights": [
+                    {
+                        "credentials": {
+                        "username": "bea06ee8-448b-4d6c-ac0d-8561ea9d3c01",
+                        "password": "MAeHtQD50F",
+                        "host": "twcservice.mybluemix.net",
+                        "port": 443,
+                        "url": "https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F
+                        }
+                    }]
+        }
     }
 
+    function getLocation(location){
+        console.log("getlocation " + location);
+        request('https://twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                console.log(body) // Show the HTML for the Google homepage. 
+            }else{
+                var lat = response.location.latitude[0];
+                var lon = response.location.longitude[0];
+                console.log("location data lat: "+lat + " long: "+long);
+            }
+        })
+    }
     //unsubscribes a sockets room
     function leaveRoom(socket){
         roomUserlist[socket.name].remove();
