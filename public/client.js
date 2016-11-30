@@ -80,6 +80,10 @@ $(document).ready (function() {
         $('#messages').empty();
         $('#messages').append($('<li>').text(data));
     });
+    
+     socket.on('wetter event', function(city,iconid){
+        $('#messages').append($('<li>').text(city+" "+iconid));
+    });
   
   /*
    * function to post the file link,
