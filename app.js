@@ -275,18 +275,18 @@ function registerUser(name, password, avatarurl, clientSocket){
         userlist.push(clientSocket.name);
 }
 //checks if the avatar at url is human
-function checkAvatar(url){
-    url = url.substring(1);
-    url = appEnv.url + url;
+function checkAvatar(urlstring){
+    urlstring = urlstring.substring(1);
+    urlstring = appEnv.url + urlstring;
     console.log("check avatar with url: " + url);
-    params = {image: url};
+    params = {url: urlstring};
      return facerecognition.detectFaces(params, function(err, result) {                   
          if (err) {
              console.log(err);   
              return false;
          } else {
              console.log("checkavatar no error");
-            if(result.images[0].faces.length>0){
+            if(result.images[0].faces.length>0 || result.images[0].faces === undefined || result.images[0].faces === null){
                 console.log("checkavatar faces.length > 0");
                 return true;
             }else{
