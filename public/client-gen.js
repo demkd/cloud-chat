@@ -13848,7 +13848,7 @@ $(document).ready (function() {
       avatar.src = avatarurl;
       $('#messages').append($('<li>'));
       $('#messages').append(avatar);
-      $('#messages').append(msg);
+      writeMsg(msg);
   });
     
   socket.on('server message', function(msg){
