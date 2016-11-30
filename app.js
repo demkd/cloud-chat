@@ -195,7 +195,7 @@ io.on('connection', function(socket){
                         socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
                      } else {
                         console.log("checkavatar no error");
-                        if(result.images[0].faces.length>0 || result.images[0].faces === undefined ||             result.images[0].faces === null){
+                        if(result.images[0].faces.length>0){
                             console.log("checkavatar faces.length > 0");
                             console.log("User wurde nicht gefunden! Wird registriert.");
                             registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
@@ -213,15 +213,39 @@ io.on('connection', function(socket){
             console.log("User wurde in der Datenbank gefunden!");
             if(resultSet.docs[0].password === hashedPassword){
                 socket.name = name;
-                socket.avatar = resultSet.docs[0].avatar;
-                users[socket.name] = socket;
-                userlist.push(name);
-                console.log(time(), name, 'hat sich angemeldet');
-                roomUserlist[socket.name] = standardRoom;
-		        io.emit('server message', time() + name + ' signed in');                
+                if(socket.avatar === undefined || socket.avatar === null || socket.avatar === resultSet.docs[0].avatar){
+                    socket.avatar = resultSet.docs[0].avatar;
+                    users[socket.name] = socket;
+                    userlist.push(name);
+                    console.log(time(), name, 'hat sich angemeldet');
+                    roomUserlist[socket.name] = standardRoom;
+		            io.emit('server message', time() + name + ' signed in');  
+                    
+                    //New Avatar
+                }else{
+                    var urlstring = socket.avatar.substring(1);
+                     urlstring = appEnv.url + urlstring;
+                    var params = {url: urlstring};
+                    facerecognition.detectFaces(params, function(err, result) {                   
+                     if (err) {
+                        console.log(err);   
+                        console.log("Fehler bei Watson Gesichtserkennung");
+                        socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
+                     } else {
+                          if(result.images[0].faces.length > 0){
+                            users[socket.name] = socket;
+                            userlist.push(name);
+                            console.log(time(), name, 'hat sich angemeldet');
+                            roomUserlist[socket.name] = standardRoom;
+		                    io.emit('server message', time() + name + ' signed in');     
+                          }
+                     }
+                    });
+                }
+                              
             }else{
-                socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");
-            }
+                socket.emit('server message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");
+                }
          }
      });   
     });   
