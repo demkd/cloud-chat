@@ -184,7 +184,7 @@ io.on('connection', function(socket){
                     socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
-                     urlstring = urlstring.substring(1);
+                     var urlstring = socket.avatar.substring(1);
                      urlstring = appEnv.url + urlstring;
                      console.log("check avatar with url: " + urlstring);
                      params = {url: urlstring};
