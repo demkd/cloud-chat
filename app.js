@@ -278,7 +278,7 @@ function registerUser(name, password, avatarurl, clientSocket){
 function checkAvatar(urlstring){
     urlstring = urlstring.substring(1);
     urlstring = appEnv.url + urlstring;
-    console.log("check avatar with url: " + url);
+    console.log("check avatar with url: " + urlstring);
     params = {url: urlstring};
      return facerecognition.detectFaces(params, function(err, result) {                   
          if (err) {
