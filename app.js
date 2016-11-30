@@ -457,13 +457,13 @@ function time(){
 
     function getLocation(location){
         console.log("getlocation " + location);
-        request('https://twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location, function (error, response, body) {
+        request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var lat = body.location.latitude[0];
                 var lon = body.location.longitude[0];
                 console.log("location data lat: "+lat + " long: "+lon);
             }else{
-                console.log("error");
+                console.log("An error happened while trying to get location");
             }
         })
     }
