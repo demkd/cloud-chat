@@ -276,6 +276,8 @@ function registerUser(name, password, avatarurl, clientSocket){
 }
 //checks if the avatar at url is human
 function checkAvatar(url){
+    url = appEnv.url + url;
+    console.log("check avatar with url: " + url);
     params = {image: url};
      return facerecognition.detectFaces(params, function(err, result) {                   
          if (err) {
