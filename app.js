@@ -87,8 +87,8 @@ io.on('connection', function(socket){
                     var resjson = JSON.parse(response.body);
                     var lat = resjson.location.latitude[0];
                     var lon = resjson.location.longitude[0];
-                    console.log("get weathericon lat:"+ latitude + " long:" + longitude);
-                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+latitude+'/'+longitude+'/observations.json?language=en-US', function (error, response, body){
+                    console.log("get weathericon lat:"+ lat + " long:" + lon);
+                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
                 if (!error && response.statusCode == 200) {
                     var resjson = JSON.parse(response.body);
                     var iconID = resjson.observation.wx_icon;
