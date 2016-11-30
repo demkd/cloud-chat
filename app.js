@@ -233,11 +233,20 @@ io.on('connection', function(socket){
                         socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
                      } else {
                           if(result.images[0].faces.length > 0){
+                            updateDB(socket.name, socket.avatar);
                             users[socket.name] = socket;
                             userlist.push(name);
                             console.log(time(), name, 'hat sich angemeldet');
                             roomUserlist[socket.name] = standardRoom;
 		                    io.emit('server message', time() + name + ' signed in');     
+                          }else{
+                              socket.emit('server message', "Der neue Avatar ist nicht regelkonform. Der alte Avatar bleibt bestehen.");
+                              socket.avatar = resultSet.docs[0].avatar;
+                              users[socket.name] = socket;
+                              userlist.push(name);
+                              console.log(time(), name, 'hat sich angemeldet');
+                              roomUserlist[socket.name] = standardRoom;
+		                      io.emit('server message', time() + name + ' signed in');  
                           }
                      }
                     });
@@ -305,7 +314,14 @@ function writeToDB(name, password, avatarurl){
         console.log('####Created design document '+body);
         });
 }
-
+function updateDB(name, avatarurl){
+    idSelector.selector._id = name;
+    database.find(idSelector, function(error, resultSet) {
+        var id = resultSet.docs[0]._id;
+        var rev = resultSet.docs[0]._rev;
+        database.insert({_id: id, _rev: rev, avatar: avatarurl}, function(err, body) {});
+    });
+}
 //if a new user is to be registered, the name and password get entered into the db and the name - socket connection is saved on the server
 function registerUser(name, password, avatarurl, clientSocket){
         writeToDB(name, password, avatarurl);
