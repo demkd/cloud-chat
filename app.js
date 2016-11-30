@@ -459,11 +459,11 @@ function time(){
         console.log("getlocation " + location);
         request('https://twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                console.log(body) // Show the HTML for the Google homepage. 
+                var lat = body.location.latitude[0];
+                var lon = body.location.longitude[0];
+                console.log("location data lat: "+lat + " long: "+lon);
             }else{
-                var lat = response.location.latitude[0];
-                var lon = response.location.longitude[0];
-                console.log("location data lat: "+lat + " long: "+long);
+                console.log("error");
             }
         })
     }
