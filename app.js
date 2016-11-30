@@ -92,7 +92,6 @@ io.on('connection', function(socket){
 				} else if (msg.substr(0, 7) == '/wetter'){
                     var split = msg.split(" ");
                     getLocation(split[1]);
-                }
                 }else if (msg.substr(0, 3) == '/w ') {
 					if (socket.name !== undefined) {
 						msg = msg.substr(3); // this removes the '/w ' string
