@@ -76,7 +76,7 @@ io.on('connection', function(socket){
 					var listOfUsers = getUserlist();
 					console.log(socket.name + " hat /list ausgefuehrt");
 					if (socket.name !== undefined) {
-						socket.emit('chat message', listOfUsers);
+						socket.emit('server message', listOfUsers);
 					}
 					/*
 					 * if the substring of the first 3 letters are the same as '/w' the users wants to whisper to another user
@@ -100,15 +100,15 @@ io.on('connection', function(socket){
 
 							if (users[nameToSendMessageTo] !== undefined) {
                                 
-                                users[nameToSendMessageTo].emit('chat message', time() + "from " + socket.name + ": " + messageToSend);
+                                users[nameToSendMessageTo].emit('chat message', socket.avatar, time() + "from " + socket.name + ": " + messageToSend);
                                 
-								socket.emit('chat message', time() + "to "+ nameToSendMessageTo + ": "+ messageToSend);
+								socket.emit('chat message', socket.avatar, time() + "to "+ nameToSendMessageTo + ": "+ messageToSend);
 							}
 							/*
 							 * User gets this message if he wants to whisper to himself
 							 */
 						} else {
-							socket.emit('chat message', time()
+							socket.emit('server message', time()
 									+ "you can't text to yourself!")
 						}
 					}
@@ -126,19 +126,19 @@ io.on('connection', function(socket){
                             if(roomPasswordlist[chatRoomName] === chatRoomPassword){
                             roomUserlist[socket.name]=chatRoomName;
                             console.log("User hat versucht einen Raum zu erstellen der bereits existiert");
-                            socket.emit('chat message',"new room created");
+                            socket.emit('server message',"new room created");
                             socket.emit('clearChat', "joining: "+chatRoomName);
                             }else{
                                 roomUserlist[socket.name]=standardRoom;
                                 console.log("hat falsches PW für den Raum eingegeben.");
-                                socket.emit('chat message', 'Wrong Password. You have been moved back to the standard room.');
+                                socket.emit('server message', 'Wrong Password. You have been moved back to the standard room.');
                                  }
                         }else {
                             roomlist.push(chatRoomName)
                             roomPasswordlist[chatRoomName] = chatRoomPassword;
                             roomUserlist[socket.name]=chatRoomName;
                             console.log("User hat einen neuen Raum erstellt");
-                            socket.emit('chat message',"new room created"); 
+                            socket.emit('server message',"new room created"); 
                             socket.emit('clearChat', "joining: "+chatRoomName);
                         }
                         
@@ -185,7 +185,7 @@ io.on('connection', function(socket){
                 console.log("User wurde nicht gefunden! Wird registriert.");
                 registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
                 roomUserlist[socket.name]=standardRoom;
-                io.emit('chat message', name + ' hat sich registriert.');
+                io.emit('server message', name + ' hat sich registriert.');
                 }    
         } else {
             console.log("User wurde in der Datenbank gefunden!");
@@ -196,7 +196,7 @@ io.on('connection', function(socket){
                 userlist.push(name);
                 console.log(time(), name, 'hat sich angemeldet');
                 roomUserlist[socket.name] = standardRoom;
-		        io.emit('chat message', time() + name + ' signed in');                
+		        io.emit('server message', time() + name + ' signed in');                
             }else{
                 socket.emit('chat message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");
             }
@@ -223,7 +223,7 @@ io.on('connection', function(socket){
 			delete roomUserlist[socket.name];
             deleteUserFromList(socket.name);
 			console.log(time(), socket.name, 'hat sich abgemeldet');
-            io.emit('chat message', time() + socket.name + ' signed out');
+            io.emit('server message', time() + socket.name + ' signed out');
 		}
 	});
 	  

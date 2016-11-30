@@ -13850,6 +13850,11 @@ $(document).ready (function() {
       $('#messages').append(avatar);
       $('#messages').append(msg);
   });
+    
+  socket.on('server message', function(msg){
+      $('#messages').append($('<li>'));
+      $('#messages').append(msg);
+  })
   
   /* function to login the User 
    * if the users submits something the value of the name field will be send to the server.
