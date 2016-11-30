@@ -462,6 +462,7 @@ function time(){
                 var resjson = JSON.parse(response.body);
                 var lat = resjson.location.latitude[0];
                 var lon = resjson.location.longitude[0];
+                getWeatherIcon(lat, lon);
                 console.log("location data lat: "+lat + " long: "+lon);
             }else{
                 console.log("An error happened while trying to get location");
