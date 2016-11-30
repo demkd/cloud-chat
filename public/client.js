@@ -17,18 +17,7 @@ $(document).ready (function() {
       avatar.src = avatarurl;
       $('#messages').append($('<li>'));
       $('#messages').append(avatar);
-      var split = msg.split("&&&");
-      for(var i = 0; i < split.length; i++){
-            if(i%2==0){
-                console.log("even:"+split[i]);
-                $('#messages').append(split[i]);
-            }else{
-                console.log("odd:"+split[i]);
-                var icon = new Image(16,16);
-                icon.src = "./public/images/" + id + "\.png";
-                $('#messages').append(icon);            
-            }
-        }
+      $('#messages').append(msg);
   });
     
   socket.on('server message', function(msg){
