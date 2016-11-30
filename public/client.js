@@ -17,7 +17,18 @@ $(document).ready (function() {
       avatar.src = avatarurl;
       $('#messages').append($('<li>'));
       $('#messages').append(avatar);
-      writeMsg(msg);
+      var split = msg.split("&&&");
+      for(var i = 0; i < split.length; i++){
+            if(i%2==0){
+                console.log("even:"+split[i]);
+                $('#messages').append(split[i]);
+            }else{
+                console.log("odd:"+split[i]);
+                var icon = new Image(16,16);
+                icon.src = "./public/images/" + id + "\.png";
+                $('#messages').append(icon);            
+            }
+        }
   });
     
   socket.on('server message', function(msg){
@@ -96,21 +107,7 @@ $(document).ready (function() {
          $('#messages').append($('<li>').append($('<a href="./downloads/' + data.name +  '"target="_blank">').text(data.time+data.socketName+": "+data.name)));
      }
   });
-    function writeMsg(msg){
-        var split = msg.split("&&&");
-        for(var i = 0; i < split; i++){
-            if(i%2==0){
-                $('#messages').append(split[i]);
-            }else{
-                appendIcon(split[i]);
-            }
-        }
-    }
-    function appendIcon(id){
-        var icon = new Image(16,16);
-        icon.src = "./public/images/" + id + "\.png";
-        $('#messages').append(icon);
-    }
+
    function checkIfImage(url){
      var dataName = url+"";
      var split = url.split(".");
