@@ -36,7 +36,7 @@ var idSelector = {
         }
 };
 //calls the function used to initiate the bluemix noSQL DBAS
-cloudantInit();
+servicesInit();
 
 //gets the port from the bluemix environment
 http.listen(appEnv.port, '0.0.0.0', function() {
@@ -184,7 +184,7 @@ io.on('connection', function(socket){
                     socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
-                    if(true){
+                    if(checkAvatar(socket.avatar)){
                         console.log("User wurde nicht gefunden! Wird registriert.");
                         registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
                         roomUserlist[socket.name]=standardRoom;
@@ -274,6 +274,25 @@ function registerUser(name, password, avatarurl, clientSocket){
         userPasswords[name]=password;
         userlist.push(clientSocket.name);
 }
+//checks if the avatar at url is human
+function checkAvatar(url){
+    params = {image: url};
+     return facerecognition.detectFaces(params, function(err, result) {                   
+         if (err) {
+             console.log(err);   
+             return false;
+         } else {
+             console.log("checkavatar no error");
+            if(result.images[0].faces.length>0){
+                console.log("checkavatar faces.length > 0");
+                return true;
+            }else{
+                console.log("checkavatar faces.length = -1/0");
+                return false;
+            } 
+         }
+     });
+}
 /*
  * function to get the current time 
  */
@@ -347,7 +366,7 @@ function time(){
         return targetUsers;
     }
     //initializes the cloudant nosqldbas within the applications environment
-    function cloudantInit(){
+    function servicesInit(){
         if (process.env.VCAP_SERVICES) {
         services = JSON.parse(process.env.VCAP_SERVICES);
 
