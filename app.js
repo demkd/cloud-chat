@@ -468,6 +468,18 @@ function time(){
             }
         })
     }
+    function getWeatherIcon(latitude, longitude){
+        console.log("get weathericon lat:"+ latitude + " long:" + longitude);
+         request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
+             if (!error && response.statusCode == 200) {
+                var resjson = JSON.parse(response.body);
+                var iconID = resjson.observation.wx_icon;
+                console.log("icon ID:" + iconID);
+            }else{
+                console.log("An error happened while trying to get weather data");
+            }
+         });
+    }
     //unsubscribes a sockets room
     function leaveRoom(socket){
         roomUserlist[socket.name].remove();
