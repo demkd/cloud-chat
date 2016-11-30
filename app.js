@@ -76,6 +76,17 @@ io.on('connection', function(socket){
 	  socket.on('chat message',
 			function(msg) {
 				msg = msg.trim();
+                var split = msg.split(" ");
+                for (var i = 0; i < split.length; i++) {
+                if(split[i]==="Reutlingen"||split[i]==="Stuttgart"||split[i]==="London"||split[i]==="Paris"||split[i]==="Ankara"||split[i]==="California"){
+                    split[i]=split[i]+"ßTest";
+                    }
+                    
+                }
+                msg="";
+                for (var i = 0; i < split.length; i++) {
+                msg += split[i] + " " ;
+                }
 				if (msg.substr(0, 5) == '/list') {
 					var listOfUsers = getUserlist();
 					console.log(socket.name + " hat /list ausgefuehrt");
