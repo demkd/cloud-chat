@@ -184,7 +184,7 @@ io.on('connection', function(socket){
                     socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
-                    if(){
+                    if(true){
                         console.log("User wurde nicht gefunden! Wird registriert.");
                         registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
                         roomUserlist[socket.name]=standardRoom;
