@@ -89,6 +89,7 @@ io.on('connection', function(socket){
                     var lon = resjson.location.longitude[0];
                     console.log("get weathericon lat:"+ lat + " long:" + lon);
                     request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
+                        console.log("request of iconID");
                 if (!error && response.statusCode == 200) {
                     var resjson = JSON.parse(response.body);
                     var iconID = resjson.observation.wx_icon;
