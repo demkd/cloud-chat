@@ -11,7 +11,8 @@
     "express": "4.13.x",
     "sha256": "^0.2.0",
     "socket.io": "^1.5.1",
-    "socket.io-stream": "0.9.1"
+    "socket.io-stream": "0.9.1",
+    "watson-developer-cloud": "^2.9.1"
   },
   "repository": {},
   "engines": {

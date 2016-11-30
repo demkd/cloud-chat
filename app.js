@@ -22,6 +22,8 @@ var appEnv = cfenv.getAppEnv();
 
 // Load the Cloudant library.
 var Cloudant = require('cloudant');
+var VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
+var facerecognition;
 var sha256 = require('sha256');
 var services;
 var credentials;
@@ -179,13 +181,17 @@ io.on('connection', function(socket){
         if (resultSet.docs.length == 0) {
                 if(socket.avatar === null || socket.avatar === undefined || socket.avatar === ""){
                     console.log("User hat versucht sich ohne Avatar zu registrieren.");
-                    socket.emit('chat message' + "Bitte laden sie einen Avatar hoch.");
+                    socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
-                console.log("User wurde nicht gefunden! Wird registriert.");
-                registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
-                roomUserlist[socket.name]=standardRoom;
-                io.emit('server message', name + ' hat sich registriert.');
+                    if(){
+                        console.log("User wurde nicht gefunden! Wird registriert.");
+                        registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
+                        roomUserlist[socket.name]=standardRoom;
+                        io.emit('server message', name + ' hat sich registriert.');    
+                    }else{
+                       socket.emit('server message', "Bild wurde nicht als Mensch erkannt. Bitte laden sie ein GSIIIIICHT hoch.");
+                    }
                 }    
         } else {
             console.log("User wurde in der Datenbank gefunden!");
@@ -357,6 +363,17 @@ function time(){
         
         if (cloudant !== null && cloudant !== undefined) {
             database = cloudant.db.use('usernameandpasswords');
+        }
+        
+        
+        var visualRecognitionService = services['watson_vision_combined'];
+        for (var service in visualRecognitionService) {
+            if (visualRecognitionService[service].name === 'visual-recognition') {
+                facerecognition = new VisualRecognitionV3({
+                    api_key: visualRecognitionService[service].credentials.api_key,
+                    version_date: '2016-05-20'
+                });
+            }
         }
     }
 
