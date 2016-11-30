@@ -184,16 +184,30 @@ io.on('connection', function(socket){
                     socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
-                    checkAvatar(socket.avatar);
-                    if(socket.avataraccepted){
-                        console.log("User wurde nicht gefunden! Wird registriert.");
-                        registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
-                        roomUserlist[socket.name]=standardRoom;
-                        io.emit('server message', name + ' hat sich registriert.');    
-                    }else{
-                        console.log("User hat versucht sich mit einem ungültigen avatar zu registrieren.");
-                       socket.emit('server message', "Bild wurde nicht als Mensch erkannt. Bitte laden sie ein GSIIIIICHT hoch.");
-                    }
+                     urlstring = urlstring.substring(1);
+                     urlstring = appEnv.url + urlstring;
+                     console.log("check avatar with url: " + urlstring);
+                     params = {url: urlstring};
+                     facerecognition.detectFaces(params, function(err, result) {                   
+                     if (err) {
+                        console.log(err);   
+                        console.log("Fehler bei Watson Gesichtserkennung");
+                        socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
+                     } else {
+                        console.log("checkavatar no error");
+                        if(result.images[0].faces.length>0 || result.images[0].faces === undefined ||             result.images[0].faces === null){
+                            console.log("checkavatar faces.length > 0");
+                            console.log("User wurde nicht gefunden! Wird registriert.");
+                            registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
+                            roomUserlist[socket.name]=standardRoom;
+                            io.emit('server message', name + ' hat sich registriert.');  
+                        }else{
+                            console.log("checkavatar faces.length = -1/0");
+                            console.log("User hat versucht sich mit einem ungültigen avatar zu registrieren.");
+                            socket.emit('server message', "Bild wurde nicht als Mensch erkannt. Bitte laden sie ein GSIIIIICHT hoch.");
+                            } 
+                        }              
+                    });           
                 }    
         } else {
             console.log("User wurde in der Datenbank gefunden!");
@@ -278,25 +292,7 @@ function registerUser(name, password, avatarurl, clientSocket){
 }
 //checks if the avatar at url is human
 function checkAvatar(urlstring){
-    urlstring = urlstring.substring(1);
-    urlstring = appEnv.url + urlstring;
-    console.log("check avatar with url: " + urlstring);
-    params = {url: urlstring};
-    facerecognition.detectFaces(params, function(err, result) {                   
-         if (err) {
-             console.log(err);   
-             socket.avataraccepted = false;
-         } else {
-             console.log("checkavatar no error");
-            if(result.images[0].faces.length>0 || result.images[0].faces === undefined || result.images[0].faces === null){
-                console.log("checkavatar faces.length > 0");
-                socket.avataraccepted = true;
-            }else{
-                console.log("checkavatar faces.length = -1/0");
-                socket.avataraccepted = false;
-            } 
-         }
-     });
+    
 }
 /*
  * function to get the current time 
