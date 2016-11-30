@@ -276,6 +276,7 @@ function registerUser(name, password, avatarurl, clientSocket){
 }
 //checks if the avatar at url is human
 function checkAvatar(url){
+    url = url.substring(1);
     url = appEnv.url + url;
     console.log("check avatar with url: " + url);
     params = {image: url};
