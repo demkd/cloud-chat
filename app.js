@@ -32,6 +32,7 @@ var credentials;
 var cloudant;
 var database;
 var masterPassword= '123';
+var cities={"Reutlingen","Stuttgart","London","Paris","Ankara","California"};
 var idSelector = {
     selector: {
         "_id": ""
@@ -78,9 +79,10 @@ io.on('connection', function(socket){
 				msg = msg.trim();
                 var split = msg.split(" ");
                 for (var i = 0; i < split.length; i++) {
-                if(split[i]==="Reutlingen"||split[i]==="Stuttgart"||split[i]==="London"||split[i]==="Paris"||split[i]==="Ankara"||split[i]==="California"){
-                    console.log("getlocation " + location);
-                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location+"&language=en-US", function (error, response, body) {
+                for(var j = 0; j < split.length; j++){
+                if(split[i]===cities[j]){
+                    console.log("getlocation " + cities[j]);
+                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + cities[j]+"&language=en-US", function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var resjson = JSON.parse(response.body);
                     var lat = resjson.location.latitude[0];
@@ -91,7 +93,7 @@ io.on('connection', function(socket){
                     var resjson = JSON.parse(response.body);
                     var iconID = resjson.observation.wx_icon;
                     console.log("icon ID:" + iconID);
-                    split[i]=split[i] + "ßßßßß" + iconID;
+                    split[i]=split[i] + iconID;
                 }else{
                     console.log("An error happened while trying to get weather data");
                 }
@@ -101,6 +103,8 @@ io.on('connection', function(socket){
                     console.log("An error happened while trying to get location");
                 }
                 });
+                    }
+                    
                     }
                     
                 }
