@@ -161,13 +161,13 @@ io.on('connection', function(socket){
 							console.log(time() + " " + socket.name + " : " + msg);
                             var usersInRoom = userInRoom(roomUserlist[socket.name]);
                             var split = msg.split(" ");
-                            for(var i = 0; i<usersInRoom.length;i++){
-                                if(users[usersInRoom[i]] !== undefined){
-                                users[usersInRoom[i]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg);
+                            for(var x = 0; x<usersInRoom.length;x++){
+                                if(users[usersInRoom[x]] !== undefined){
+                                users[usersInRoom[x]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg);
                                  
                                 for (var k = 0; k < split.length; k++) {
                                     for(var j = 0; j < cities.length; j++){
-                                        console.log("Iterationsvariablen: i = "+i+" k = "+k+" j = "+j);
+                                        
                                         if(split[k]===cities[j]){
                                             console.log("getlocation " + cities[j]);
                                             request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + cities[j]+"&language=en-US", function (error, response, body) {
@@ -177,14 +177,15 @@ io.on('connection', function(socket){
                                                     var lon = resjson.location.longitude[0];
                                                     console.log("get weathericon lat:"+ lat + " long:" + lon);
                                                     request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
+                                                        console.log("In Request 2 - Iterationsvariablen: x = "+x+" k = "+k+" j = "+j);
                                                         console.log("request of iconID");
                                                         if (!error && response.statusCode == 200) {
                                                             var resjson = JSON.parse(response.body);
                                                             var iconID = resjson.observation.wx_icon;
                                                             console.log("icon ID:" + iconID);
-                                                            console.log("Users in Room i( als 0 hardgecodet ): "+users[usersInRoom[0]]+" i = "+i);
+                                                            console.log("Users in Room x: "+users[usersInRoom[x]]+" x = "+x);
                                                             socket.emit('server message', "Request function wurde betreten. Nach dieser Zeile erfolgt emit!");
-                                                            users[usersInRoom[0]].emit('wetter event', cities[j],iconID);
+                                                            users[usersInRoom[x]].emit('wetter event', cities[j],iconID);
                                                         }else{
                                                             console.log("An error happened while trying to get weather data");
                                                         }
