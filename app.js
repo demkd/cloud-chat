@@ -163,9 +163,15 @@ io.on('connection', function(socket){
                             var split = msg.split(" ");
                             for(var x = 0; x<usersInRoom.length;x++){
                                 if(users[usersInRoom[x]] !== undefined){
-                                users[usersInRoom[x]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg);
-                                 
-                                for (var k = 0; k < split.length; k++) {
+                                    users[usersInRoom[x]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg);
+                                    for (var i = 0; i < cities.length; i++) {
+                                        for (var k = 0; i < split.length; k++) {
+                                            if(split[k]===cities[i]){
+                                                getLocation(cities[i],users[usersInRoom[x]]);
+                                            }
+                                    }
+                                        
+                               /* for (var k = 0; k < split.length; k++) {
                                     for(var j = 0; j < cities.length; j++){
                                         
                                         if(split[k]===cities[j]){
@@ -197,13 +203,15 @@ io.on('connection', function(socket){
                                            });
                                         }
                                     }
-                                }
+                               } */
                             }
                         }
 				    }
 				}
             }
       });
+    
+    
     
 	  
 	  /*
@@ -345,6 +353,7 @@ io.on('connection', function(socket){
 		});
 	  
 	});
+
 
 //simple fire-and-forget function that writes the input into the cloudant db
 function writeToDB(name, password, avatarurl){
@@ -492,27 +501,31 @@ function time(){
         }
     }
 
-    function getLocation(location){
+    function getLocation(location, users){
         console.log("getlocation " + location);
         request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location+"&language=en-US", function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var resjson = JSON.parse(response.body);
                 var lat = resjson.location.latitude[0];
                 var lon = resjson.location.longitude[0];
-                getWeatherIcon(lat, lon);
+                getWeatherIcon(lat, lon, location, users);
                 console.log("location data lat: "+lat + " long: "+lon);
             }else{
                 console.log("An error happened while trying to get location");
             }
         });
     }
-    function getWeatherIcon(latitude, longitude){
+    function getWeatherIcon(latitude, longitude, location, users){
         console.log("get weathericon lat:"+ latitude + " long:" + longitude);
          request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+latitude+'/'+longitude+'/observations.json?language=en-US', function (error, response, body){
              if (!error && response.statusCode == 200) {
                 var resjson = JSON.parse(response.body);
                 var iconID = resjson.observation.wx_icon;
                 console.log("icon ID:" + iconID);
+                for(var x = 0; x < usersInRoom.length; x++){
+                    users[usersInRoom[x]].emit('wetter event', location, iconID);
+                }
+                
             }else{
                 console.log("An error happened while trying to get weather data");
             }
