@@ -249,6 +249,7 @@ io.on('connection', function(socket){
                         socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
                      } else {
                         console.log("checkavatar no error");
+                         console.log(JSON.stringify(result, null, 2));
                         console.log("result: "+result+" result.images[0]: "+result.images[0]+" result.images[0].faces: "+result.images[0].faces);
                         if(result.images[0].faces.length>0){
                             console.log("checkavatar faces.length > 0");
