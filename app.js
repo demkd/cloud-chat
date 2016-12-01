@@ -167,7 +167,10 @@ io.on('connection', function(socket){
                                     for (var i = 0; i < cities.length; i++) {
                                         for (var k = 0; i < split.length; k++) {
                                             if(split[k]===cities[i]){
-                                                getLocation(cities[i],users[usersInRoom[x]]);
+                                                console.log("i = "+i+" k = "+k);
+                                                console.log("city: "+cities[i]+" user: "+users[usersInRoom[x]);
+                                                //getLocation(cities[i],users[usersInRoom[x]]);
+                                                users[usersInRoom[x].emit("server message", cities[i]);
                                             }
                                         }
                                     }
