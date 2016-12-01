@@ -13913,8 +13913,8 @@ $(document).ready (function() {
     });
     
      socket.on('wetter event', function(city,iconID){
-         var wetterIcon = new Image(256,256);
-         wetterIcon.src = "./public/images/icon" + iconID + "\.png";
+         var wetterIcon = new Image(201,200);
+         wetterIcon.src = "./downloads/icon" + iconID + "\.png";
          $('#messages').append($('<li>'));
          $('#messages').append($('<li>').text("Das Wetter für: "+city+" "));
          $('#messages').append(wetterIcon);
