@@ -251,17 +251,17 @@ io.on('connection', function(socket){
                         console.log("checkavatar no error");
                          console.log(JSON.stringify(result, null, 2));
                         console.log("result: "+result+" result.images[0]: "+result.images[0]+" result.images[0].faces: "+result.images[0].faces);
-                        //if(result.images[0].faces.length>0){
+                        if(result.images[0].faces.length>0){
                             console.log("checkavatar faces.length > 0");
                             console.log("User wurde nicht gefunden! Wird registriert.");
                             registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
                             roomUserlist[socket.name]=standardRoom;
                             io.emit('server message', name + ' hat sich registriert.');  
-                        //}else{
-                           // console.log("checkavatar faces.length = -1/0");
-                          //  console.log("User hat versucht sich mit einem ungültigen avatar zu registrieren.");
-                         //   socket.emit('server message', "Bild wurde nicht als Mensch erkannt. Bitte laden sie ein GSIIIIICHT hoch.");
-                          //  } 
+                        }else{
+                           console.log("checkavatar faces.length = -1/0");
+                           console.log("User hat versucht sich mit einem ungültigen avatar zu registrieren.");
+                           socket.emit('server message', "Bild wurde nicht als Mensch erkannt. Bitte laden sie ein GSIIIIICHT hoch.");
+                          } 
                         }              
                     });           
                 }    
