@@ -167,6 +167,7 @@ io.on('connection', function(socket){
                                  
                                 for (var k = 0; k < split.length; k++) {
                                     for(var j = 0; j < cities.length; j++){
+                                        console.log("Iterationsvariablen: i = "+i+" k = "+k+" j = "+j);
                                         if(split[k]===cities[j]){
                                             console.log("getlocation " + cities[j]);
                                             request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + cities[j]+"&language=en-US", function (error, response, body) {
@@ -181,9 +182,9 @@ io.on('connection', function(socket){
                                                             var resjson = JSON.parse(response.body);
                                                             var iconID = resjson.observation.wx_icon;
                                                             console.log("icon ID:" + iconID);
-                                                            console.log("Users in Room i: "+users[usersInRoom[i]]+" i = "+i);
+                                                            console.log("Users in Room i( als 0 hardgecodet ): "+users[usersInRoom[0]]+" i = "+i);
                                                             socket.emit('server message', "Request function wurde betreten. Nach dieser Zeile erfolgt emit!");
-                                                            users[usersInRoom[i]].emit('wetter event', cities[j],iconID);
+                                                            users[usersInRoom[0]].emit('wetter event', cities[j],iconID);
                                                         }else{
                                                             console.log("An error happened while trying to get weather data");
                                                         }
