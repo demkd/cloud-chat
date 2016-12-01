@@ -169,8 +169,8 @@ io.on('connection', function(socket){
                                             if(split[k]===cities[i]){
                                                 console.log("i = "+i+" k = "+k);
                                                 console.log("city: "+cities[i]+" user: "+users[usersInRoom[x]]);
-                                                //getLocation(cities[i],users[usersInRoom[x]]);
-                                                users[usersInRoom[x]].emit("server message", cities[i]);
+                                                getLocation(cities[i],users[usersInRoom[x]]);
+                                                //users[usersInRoom[x]].emit("server message", cities[i]);
                                             }
                                         }
                                     }
@@ -527,6 +527,7 @@ function time(){
                 var iconID = resjson.observation.wx_icon;
                 console.log("icon ID:" + iconID);
                 for(var x = 0; x < usersInRoom.length; x++){
+                    console.log("location: "+location+" iconID: "+iconID+" user: "+users[usersInRoom[x]]+" x: "+x);
                     users[usersInRoom[x]].emit('wetter event', location, iconID);
                 }
                 
