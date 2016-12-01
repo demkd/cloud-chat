@@ -241,7 +241,7 @@ io.on('connection', function(socket){
                      var urlstring = socket.avatar.substring(1);
                      urlstring = appEnv.url + urlstring;
                      console.log("check avatar with url: " + urlstring);
-                     params = {url: urlstring};
+                     var params = {url: urlstring};
                      facerecognition.detectFaces(params, function(err, result) {                   
                      if (err) {
                         console.log(err);   
