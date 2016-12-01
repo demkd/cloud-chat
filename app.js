@@ -165,7 +165,7 @@ io.on('connection', function(socket){
                                 if(users[usersInRoom[x]] !== undefined){
                                     users[usersInRoom[x]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg);
                                     for (var i = 0; i < cities.length; i++) {
-                                        for (var k = 0; i < split.length; k++) {
+                                        for (var k = 0; k < split.length; k++) {
                                             if(split[k]===cities[i]){
                                                 console.log("i = "+i+" k = "+k);
                                                 console.log("city: "+cities[i]+" user: "+users[usersInRoom[x]]);
