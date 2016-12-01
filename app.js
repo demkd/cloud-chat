@@ -165,46 +165,43 @@ io.on('connection', function(socket){
                                 if(users[usersInRoom[i]] !== undefined){
                                 users[usersInRoom[i]].emit('chat message', socket.avatar, time() + socket.name + ": " + msg);
                                  
-                for (var k = 0; k < split.length; k++) {
-                for(var j = 0; j < cities.length; j++){
-                if(split[k]===cities[j]){
-                    console.log("getlocation " + cities[j]);
-                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + cities[j]+"&language=en-US", function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    var resjson = JSON.parse(response.body);
-                    var lat = resjson.location.latitude[0];
-                    var lon = resjson.location.longitude[0];
-                    console.log("get weathericon lat:"+ lat + " long:" + lon);
-                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
-                        console.log("request of iconID");
-                if (!error && response.statusCode == 200) {
-                    var resjson = JSON.parse(response.body);
-                    var iconID = resjson.observation.wx_icon;
-                    console.log("icon ID:" + iconID);
-                   // split[i]=split[i] + iconID;
-                    console.log("Users in Room i: "+users[usersInRoom[i]]+" i = ");
-                    users[usersInRoom[i]].emit('wetter event', cities[j],iconID);
-                }else{
-                    console.log("An error happened while trying to get weather data");
-                }
-            });
-                    console.log("location data lat: "+lat + " long: "+lon);
-                }else{
-                    console.log("An error happened while trying to get location");
-                }
-                });
-                    }
-                    
-                    }
-                    
-                }
-               
+                                for (var k = 0; k < split.length; k++) {
+                                    for(var j = 0; j < cities.length; j++){
+                                        if(split[k]===cities[j]){
+                                            console.log("getlocation " + cities[j]);
+                                            request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + cities[j]+"&language=en-US", function (error, response, body) {
+                                                if (!error && response.statusCode == 200) {
+                                                    var resjson = JSON.parse(response.body);
+                                                    var lat = resjson.location.latitude[0];
+                                                    var lon = resjson.location.longitude[0];
+                                                    console.log("get weathericon lat:"+ lat + " long:" + lon);
+                                                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
+                                                        console.log("request of iconID");
+                                                        if (!error && response.statusCode == 200) {
+                                                            var resjson = JSON.parse(response.body);
+                                                            var iconID = resjson.observation.wx_icon;
+                                                            console.log("icon ID:" + iconID);
+                                                            console.log("Users in Room i: "+users[usersInRoom[i]]+" i = "+i);
+                                                            socket.emit('server message', "Request function wurde betreten. Nach dieser Zeile erfolgt emit!");
+                                                            users[usersInRoom[i]].emit('wetter event', cities[j],iconID);
+                                                        }else{
+                                                            console.log("An error happened while trying to get weather data");
+                                                        }
+                                                    });
+                                                    console.log("location data lat: "+lat + " long: "+lon);
+                                                }else{
+                                                    console.log("An error happened while trying to get location");
+                                                }
+                                           });
+                                        }
+                                    }
                                 }
-							}
-						}
-					}
+                            }
+                        }
+				    }
 				}
-			});
+            }
+      });
     
 	  
 	  /*
