@@ -527,11 +527,11 @@ function time(){
                 var iconID = resjson.observation.wx_icon;
                 console.log("icon ID:" + iconID);
                 
-                var wetterIcon = new Image(256,256);
-                wetterIcon.src = appEnv.url + "/public/images/" + iconID+"\.png";
+                //var wetterIcon = new Image(201,200);
+                //wetterIcon.src = appEnv.url + "/public/images/" + iconID+"\.png";
                 
-                console.log("user: "+users);
-                users.emit('wetter event', location, wetterIcon);
+                //console.log("user: "+users);
+                users.emit('wetter event', location, iconID);
                 
             }else{
                 console.log("An error happened while trying to get weather data");

@@ -13912,10 +13912,13 @@ $(document).ready (function() {
         $('#messages').append($('<li>').text(data));
     });
     
-     socket.on('wetter event', function(city,wetterIcon){
-        $('#messages').append($('<li>').text("Das Wetter für "+city+":"));
-        $('#messages').append(wetterIcon);
-        $('#messages').append($('</li>'));
+     socket.on('wetter event', function(city,iconID){
+         var wetterIcon = new Image(256,256);
+         wetterIcon.src = "./public/images/" + iconID + "\.png";
+         $('#messages').append($('<li>'));
+         $('#messages').append($('<li>').text("Das Wetter für: "+city+" "));
+         $('#messages').append(wetterIcon);
+         $('#messages').append($('</li>'));
     });
   
   /*
