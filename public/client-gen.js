@@ -13914,7 +13914,7 @@ $(document).ready (function() {
     
      socket.on('wetter event', function(city,iconID){
          var wetterIcon = new Image(256,256);
-         wetterIcon.src = "./public/images/" + iconID + "\.png";
+         wetterIcon.src = "./public/images/icon" + iconID + "\.png";
          $('#messages').append($('<li>'));
          $('#messages').append($('<li>').text("Das Wetter für: "+city+" "));
          $('#messages').append(wetterIcon);
