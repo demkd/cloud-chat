@@ -81,8 +81,10 @@ $(document).ready (function() {
         $('#messages').append($('<li>').text(data));
     });
     
-     socket.on('wetter event', function(city,iconid){
-        $('#messages').append($('<li>').text(city+" "+iconid));
+     socket.on('wetter event', function(city,wetterIcon){
+        $('#messages').append($('<li>').text("Das Wetter für "+city+":"));
+        $('#messages').append(wetterIcon);
+        $('#messages').append($('</li>'));
     });
   
   /*
