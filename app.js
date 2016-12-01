@@ -288,7 +288,7 @@ io.on('connection', function(socket){
                         console.log("Fehler bei Watson Gesichtserkennung");
                         socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
                      } else {
-                         console.log("login new avatar: "result.images[0].faces+" --------");
+                         console.log("login new avatar: "+result.images[0].faces+" --------");
                           if(result.images[0].faces.length > 0){
                             updateDB(socket.name, socket.avatar);
                             users[socket.name] = socket;
