@@ -528,7 +528,7 @@ function time(){
                 console.log("icon ID:" + iconID);
                 
                 var wetterIcon = new Image(256,256);
-                wetterIcon.src = "./public/images/" + iconID+"\.png";
+                wetterIcon.src = appEnv.url + "/public/images/" + iconID+"\.png";
                 
                 console.log("user: "+users);
                 users.emit('wetter event', location, wetterIcon);
