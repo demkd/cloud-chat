@@ -168,9 +168,9 @@ io.on('connection', function(socket){
                                         for (var k = 0; i < split.length; k++) {
                                             if(split[k]===cities[i]){
                                                 console.log("i = "+i+" k = "+k);
-                                                console.log("city: "+cities[i]+" user: "+users[usersInRoom[x]);
+                                                console.log("city: "+cities[i]+" user: "+users[usersInRoom[x]]);
                                                 //getLocation(cities[i],users[usersInRoom[x]]);
-                                                users[usersInRoom[x].emit("server message", cities[i]);
+                                                users[usersInRoom[x]].emit("server message", cities[i]);
                                             }
                                         }
                                     }
