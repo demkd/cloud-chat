@@ -169,6 +169,7 @@ io.on('connection', function(socket){
                                             if(split[k]===cities[i]){
                                                 getLocation(cities[i],users[usersInRoom[x]]);
                                             }
+                                        }
                                     }
                                         
                                /* for (var k = 0; k < split.length; k++) {
