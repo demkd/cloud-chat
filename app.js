@@ -32,7 +32,7 @@ var credentials;
 var cloudant;
 var database;
 var masterPassword= '123';
-var cities=["Reutlingen","Stuttgart","Köln","Hamburg","Ankara","California"];
+var cities=["Reutlingen","Stuttgart","Tokyo","Hamburg","Ankara","California"];
 var idSelector = {
     selector: {
         "_id": ""
