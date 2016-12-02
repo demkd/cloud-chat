@@ -91,9 +91,10 @@ io.on('connection', function(socket){
 					 * then getting all the splitted messages together and sending it to the user if user exists
 					 * the user which sended the message gets a message that he has sended the message to the user with the message
 					 */
-				} else if (msg.substr(0, 7) == '/wetter'){
-                    var split = msg.split(" ");
-                    getLocation(split[1]);
+                    
+                    //Deprecated 
+				} else if (msg.substr(0, 7) == '/DEPRECATED'){
+                    // Deprecated
                 }else if (msg.substr(0, 3) == '/w ') {
 					if (socket.name !== undefined) {
 						msg = msg.substr(3); // this removes the '/w ' string
@@ -155,6 +156,8 @@ io.on('connection', function(socket){
                 } else {
 					/*
 					 *to send a message to all in the room just adding time and the name of the user by reading it out from the socket 
+                     *
+                     *added the weather check - parsing the message - if there is a city get the location and the weather
 					 */
 					if (socket.name !== undefined) {
 						if (msg !== "") {
@@ -174,40 +177,6 @@ io.on('connection', function(socket){
                                             }
                                         }
                                     }
-                                        
-                               /* for (var k = 0; k < split.length; k++) {
-                                    for(var j = 0; j < cities.length; j++){
-                                        
-                                        if(split[k]===cities[j]){
-                                            console.log("getlocation " + cities[j]);
-                                            request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + cities[j]+"&language=en-US", function (error, response, body) {
-                                                if (!error && response.statusCode == 200) {
-                                                    var resjson = JSON.parse(response.body);
-                                                    var lat = resjson.location.latitude[0];
-                                                    var lon = resjson.location.longitude[0];
-                                                    console.log("get weathericon lat:"+ lat + " long:" + lon);
-                                                    request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+lat+'/'+lon+'/observations.json?language=en-US', function (error, response, body){
-                                                        console.log("In Request 2 - Iterationsvariablen: x = "+x+" k = "+k+" j = "+j);
-                                                        console.log("request of iconID");
-                                                        if (!error && response.statusCode == 200) {
-                                                            var resjson = JSON.parse(response.body);
-                                                            var iconID = resjson.observation.wx_icon;
-                                                            console.log("icon ID:" + iconID);
-                                                            console.log("Users in Room x: "+users[usersInRoom[x]]+" x = "+x);
-                                                            socket.emit('server message', "Request function wurde betreten. Nach dieser Zeile erfolgt emit!");
-                                                            users[usersInRoom[x]].emit('wetter event', cities[j],iconID);
-                                                        }else{
-                                                            console.log("An error happened while trying to get weather data");
-                                                        }
-                                                    });
-                                                    console.log("location data lat: "+lat + " long: "+lon);
-                                                }else{
-                                                    console.log("An error happened while trying to get location");
-                                                }
-                                           });
-                                        }
-                                    }
-                               } */
                             }
                         }
 				    }
@@ -233,31 +202,39 @@ io.on('connection', function(socket){
         //searching in the database
         database.find(idSelector, function(error, resultSet) {
         if (resultSet.docs.length == 0) {
+              // if the user hasnt a avatar he cant log in
                 if(socket.avatar === null || socket.avatar === undefined || socket.avatar === ""){
                     console.log("User hat versucht sich ohne Avatar zu registrieren.");
                     socket.emit('server message', "Bitte laden sie einen Avatar hoch.");
                 }
                 else{
+                    // if he uploads one - checking if its a human
                      var urlstring = socket.avatar.substring(1);
                      urlstring = appEnv.url + urlstring;
                      console.log("check avatar with url: " + urlstring);
                      var params = {url: urlstring};
+                       // facerecognition method 
                      facerecognition.detectFaces(params, function(err, result) {                   
                      if (err) {
+                         // wenn ein fehler bei der Gesichtserkennung (durch Watson) passiert Mitteilung an den Client
                         console.log(err);   
                         console.log("Fehler bei Watson Gesichtserkennung");
                         socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
                      } else {
+                          // wenn es keinen Fehler ergibt bei der Gesichtserkennung
                         console.log("checkavatar no error");
                          console.log(JSON.stringify(result, null, 2));
                         console.log("result: "+result+" result.images[0]: "+result.images[0]+" result.images[0].faces: "+result.images[0].faces);
+                           //wenn er ein gesicht erkennt
                         if(result.images[0].faces.length>0){
                             console.log("checkavatar faces.length > 0");
                             console.log("User wurde nicht gefunden! Wird registriert.");
-                            registerUser(name, hashedPassword, socket.avatar, socket); //pruefen
+                            //register user wenn er ein gesicht erkennt
+                            registerUser(name, hashedPassword, socket.avatar, socket); 
                             roomUserlist[socket.name]=standardRoom;
                             io.emit('server message', name + ' hat sich registriert.');  
                         }else{
+                             // kein Gesicht erkannt server sendet nachricht an den client damit er ein Gesicht-Bild hochladen soll
                            console.log("checkavatar faces.length = -1/0");
                            console.log("User hat versucht sich mit einem ungültigen avatar zu registrieren.");
                            socket.emit('server message', "Bild wurde nicht als Mensch erkannt. Bitte laden sie ein GSIIIIICHT hoch.");
@@ -266,9 +243,12 @@ io.on('connection', function(socket){
                     });           
                 }    
         } else {
+            // wenn der User bereits in der Datenbank existiert (LOGIN)
             console.log("User wurde in der Datenbank gefunden!");
+            // passwort abfrage - überprüfung durch Datenbankabfrage
             if(resultSet.docs[0].password === hashedPassword){
                 socket.name = name;
+                 // wenn kein Avatar dann alten verwenden (Path auf DB) oder wenn es der gleiche ist dann auch aus DB verwenden
                 if(socket.avatar === undefined || socket.avatar === null || socket.avatar === resultSet.docs[0].avatar){
                     socket.avatar = resultSet.docs[0].avatar;
                     users[socket.name] = socket;
@@ -279,15 +259,18 @@ io.on('connection', function(socket){
                     
                     //New Avatar
                 }else{
+                    // aus socket avatar lesen 
                     var urlstring = socket.avatar.substring(1);
                      urlstring = appEnv.url + urlstring;
                     var params = {url: urlstring};
+                     // facerecognition bekommt als parameter den path bzw url des Bildes - params
                     facerecognition.detectFaces(params, function(err, result) {                   
                      if (err) {
                         console.log(err);   
                         console.log("Fehler bei Watson Gesichtserkennung");
                         socket.emit('server message', "Fehler bei Watson Gesichtserkennung");
                      } else {
+                         //Avatar wurde als Gesicht erkannt und user wird eingeloggt
                          console.log("login new avatar: "+result.images[0].faces+" --------");
                           if(result.images[0].faces.length > 0){
                             updateDB(socket.name, socket.avatar);
@@ -297,6 +280,7 @@ io.on('connection', function(socket){
                             roomUserlist[socket.name] = standardRoom;
 		                    io.emit('server message', time() + name + ' signed in');     
                           }else{
+                              // neuer Avatar enthält kein Gesicht! Altes wird verwendet
                               socket.emit('server message', "Der neue Avatar ist nicht regelkonform. Der alte Avatar bleibt bestehen.");
                               socket.avatar = resultSet.docs[0].avatar;
                               users[socket.name] = socket;
@@ -310,12 +294,13 @@ io.on('connection', function(socket){
                 }
                               
             }else{
+                // username already taken or wrong password
                 socket.emit('server message', "Login failed: Username already taken or wrong Password. Please reload the page and choose a different name or enter the correct password.");
                 }
          }
      });   
     });   
-    
+    // checking the inputed masterpassword
     socket.on('securePW', function(password){
         if(password === masterPassword){
             socket.emit('masterPassword');
@@ -351,7 +336,7 @@ io.on('connection', function(socket){
 		    console.log(time()+socket.name+": hat "+data.name+" versendet");
 		    io.emit('file', {name: data.name, time: time(),socketName: socket.name});
 		}});
-    
+     // function to get the avatar saving the path on the socket.avatar 
       ss(socket).on('avatar', function(stream, data) {
 		    var filename = "./downloads/" +  path.basename(data.name);
 		    stream.pipe(fs.createWriteStream(filename));
@@ -372,6 +357,7 @@ function writeToDB(name, password, avatarurl){
         console.log('####Created design document '+body);
         });
 }
+// function to update the DB
 function updateDB(name, avatarurl){
     idSelector.selector._id = name;
     database.find(idSelector, function(error, resultSet) {
@@ -459,9 +445,7 @@ function time(){
                 targetUsers.push(key);
             }
         }
-       // for (var it = 0; it < targetUsers.length; it++){
-         //   console.log(targetUsers[it]);
-       // }
+      
         return targetUsers;
     }
     //initializes the cloudant nosqldbas within the applications environment
@@ -483,7 +467,7 @@ function time(){
             database = cloudant.db.use('usernameandpasswords');
         }
         
-        
+         // initializes the Visual Recognition Service
         var visualRecognitionService = services['watson_vision_combined'];
         for (var service in visualRecognitionService) {
             if (visualRecognitionService[service].name === 'visualrecognition') {
@@ -493,7 +477,7 @@ function time(){
                 });
             }
         }
-        
+        // credentials of weatherservice
         var weatherservice = {
                     "weatherinsights": [
                     {
@@ -507,7 +491,7 @@ function time(){
                     }]
         }
     }
-
+ // function to get location (latitude, longitude) of the city
     function getLocation(location, users){
         console.log("getlocation " + location);
         request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v3/location/search?query=' + location+"&language=en-US", function (error, response, body) {
@@ -522,6 +506,7 @@ function time(){
             }
         });
     }
+       // getting the iconID of the current weather with the latitude and longitude of the location and sending it to the chat
     function getWeatherIcon(latitude, longitude, location, users){
         console.log("get weathericon lat:"+ latitude + " long:" + longitude);
          request('https://bea06ee8-448b-4d6c-ac0d-8561ea9d3c01:MAeHtQD50F@twcservice.mybluemix.net/api/weather/v1/geocode/'+latitude+'/'+longitude+'/observations.json?language=en-US', function (error, response, body){
@@ -529,11 +514,7 @@ function time(){
                 var resjson = JSON.parse(response.body);
                 var iconID = resjson.observation.wx_icon;
                 console.log("icon ID:" + iconID);
-                
-                //var wetterIcon = new Image(201,200);
-                //wetterIcon.src = appEnv.url + "/public/images/" + iconID+"\.png";
-                
-                //console.log("user: "+users);
+                //sending the ID of the icon and the location to all client
                 users.emit('wetter event', location, iconID);
                 
             }else{

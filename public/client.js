@@ -11,7 +11,7 @@ $(document).ready (function() {
     $('#m').val('');
     return false;
   });
-  /* function to recive the message from server */
+  /* function to recive the message(client messages) from server */
   socket.on('chat message', function(avatarurl, msg){
       var avatar = new Image(64,64);   
       avatar.src = avatarurl;
@@ -20,6 +20,7 @@ $(document).ready (function() {
       $('#messages').append(msg);
   });
     
+    // function to recive the message from server
   socket.on('server message', function(msg){
       $('#messages').append($('<li>'));
       $('#messages').append(msg);
@@ -51,6 +52,7 @@ $(document).ready (function() {
     return false;
   });
     
+    //Masterpassword check erfolgreich:
     socket.on('masterPassword', function(){
         console.log("Clientside Event angekommen!");
         $('#securePW').hide();
@@ -68,6 +70,8 @@ $(document).ready (function() {
 	    ss(socket).emit('file', stream, {size: file.size, name: file.name});
 	    ss.createBlobReadStream(file).pipe(stream);
   });
+    
+    //avatar wird hochgeladen 
   $('#avatar').change(function(e) {
         console.log("avatar hochgeladen");
 	    var file = e.target.files[0];
@@ -76,11 +80,13 @@ $(document).ready (function() {
 	    ss.createBlobReadStream(file).pipe(stream);
   });
     
+    //clearing the chat
     socket.on('clearChat', function(data){
         $('#messages').empty();
         $('#messages').append($('<li>').text(data));
     });
     
+    //wetter event um das Bild im chat anzuzeigen
      socket.on('wetter event', function(city,iconID){
          var wetterIcon = new Image(201,200);
          wetterIcon.src = "./downloads/icon" + iconID + "\.png";
@@ -106,6 +112,10 @@ $(document).ready (function() {
      }
   });
 
+    /*
+    *checking if the uploaded file is a picture 
+    *
+    */
    function checkIfImage(url){
      var dataName = url+"";
      var split = url.split(".");
