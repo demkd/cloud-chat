@@ -68,15 +68,11 @@ app.get('/', function(req, res){
 app.use(helmet({
     frameguard:false
 }));
+
 app.use(helmet.xssFilter());
+
 app.use(hsts({
     maxAge : 5184000
-}));
-app.use(helmet.contentSecurityPolicy({
-    directives:{
-        defaultSrc : ["'self'"],
-        styleSrc
-    }
 }));
 
 app.use(helmet.contentSecurityPolicy({
