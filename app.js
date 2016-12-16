@@ -68,6 +68,7 @@ app.get('/', function(req, res){
 app.use(helmet({
     frameguard:false
 }));
+app.use(helmet.xssFilter());
 app.use(hsts({
     maxAge : 5184000
 }));
