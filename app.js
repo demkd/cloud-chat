@@ -72,6 +72,24 @@ app.use(helmet.xssFilter());
 app.use(hsts({
     maxAge : 5184000
 }));
+app.use(helmet.contentSecurityPolicy({
+    directives:{
+        defaultSrc : ["'self'"],
+        styleSrc
+    }
+}));
+
+app.use(helmet.contentSecurityPolicy({
+    directives: { 
+        defaultSrc: ["'self'"], 
+        styleSrc: ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com'], 
+        fontSrc: ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com'], 
+        connectSrc: ["'self'", "ws://" + appEnv.url.replace('https://', '')] 
+    }, 
+        browserSniff: false, 
+        setAllHeaders: true 
+}));
+
 app.get('/downloads/:filename(*)', function(req, res) {
     var file = req.params.filename;
     var path = __dirname + "/downloads/" + file;
