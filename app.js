@@ -4,6 +4,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var helmet = require('helmet');
 var hsts = require('hsts');
+var xssFilter = require('x-xss-protection');
 var express_enforces_ssl = require('express-enforces-ssl');
 /*sockets are mapped by socket names*/
 var users = {};
@@ -72,7 +73,7 @@ app.use(helmet({
     frameguard:false
 }));
 
-app.use(helmet.xssFilter({setOnOldIE: true }));
+app.use(xssFilter({setOnOldIE: true }));
 
 app.use(hsts({
     maxAge : 5184000
