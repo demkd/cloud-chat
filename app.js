@@ -66,6 +66,7 @@ app.get('/', function(req, res){
 
  * to download the files response the path
  */
+app.use(helmet());
 
 app.use(helmet({
     frameguard:false
@@ -80,7 +81,8 @@ app.use(hsts({
 app.use(helmet.contentSecurityPolicy({
     directives: { 
         defaultSrc: ["'self'"], 
-        styleSrc: ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com'], 
+        scriptSrc:["'self'", "https://cdn.socket.io/socket.io-1.4.5.js"],
+        styleSrc: ["'self'", "'unsafe-inline'"], 
         fontSrc: ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com'], 
         connectSrc: ["'self'", "ws://" + appEnv.url.replace('https://', '')] 
     }, 
