@@ -2,8 +2,9 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-//var helmet = require('helmet');
-//var hsts = require('hsts');
+var helmet = require('helmet');
+var hsts = require('hsts');
+var express_enforces_ssl = require('express-enforces-ssl');
 /*sockets are mapped by socket names*/
 var users = {};
 /*users to post the userlist*/
@@ -65,12 +66,12 @@ app.get('/', function(req, res){
 
  * to download the files response the path
  */
-/*
+
 app.use(helmet({
     frameguard:false
 }));
 
-app.use(helmet.xssFilter());
+app.use(helmet.xssFilter({setOnOldIE: true }));
 
 app.use(hsts({
     maxAge : 5184000
@@ -86,12 +87,16 @@ app.use(helmet.contentSecurityPolicy({
         browserSniff: false, 
         setAllHeaders: true 
 }));
-*/
+
 app.get('/downloads/:filename(*)', function(req, res) {
     var file = req.params.filename;
     var path = __dirname + "/downloads/" + file;
     res.download(path);
 });
+
+app.enable('trust proxy');
+ 
+app.use(express_enforces_ssl());
 
 io.on('connection', function(socket){
 /*
