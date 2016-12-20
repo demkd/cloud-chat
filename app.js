@@ -82,7 +82,7 @@ app.use(hsts({
 app.use(helmet.contentSecurityPolicy({
     directives: { 
         defaultSrc: ["'self'"], 
-        scriptSrc:["'self'", "https://cdn.socket.io/socket.io-1.4.5.js"],
+        scriptSrc:["'self'", "https://cdn.socket.io/socket.io-1.4.5.js","'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"], 
         fontSrc: ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com'], 
         connectSrc: ["'self'", "ws://" + appEnv.url.replace('https://', '')] 
