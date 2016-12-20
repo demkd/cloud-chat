@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+require('express-safe-json')(express);
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var helmet = require('helmet');
@@ -84,7 +85,6 @@ app.use(helmet.contentSecurityPolicy({
         defaultSrc: ["'self'"], 
         scriptSrc:["'self'", "https://cdn.socket.io/socket.io-1.4.5.js","'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"], 
-        fontSrc: ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com'], 
         connectSrc: ["'self'", "ws://" + appEnv.url.replace('https://', '')] 
     }, 
         browserSniff: false, 
